@@ -8,7 +8,7 @@ import (
 	"github.com/boardware-cloud/common/constants"
 	"github.com/boardware-cloud/common/utils"
 	model "github.com/boardware-cloud/core-api"
-	"github.com/boardware-cloud/model/argus"
+	uptime "github.com/boardware-cloud/model/argus"
 	f "github.com/chenyunda218/golambda"
 	"github.com/gin-gonic/gin"
 )

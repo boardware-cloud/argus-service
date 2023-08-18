@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: core
+  name: argus
   labels:
-    app: core
+    app: argus
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: core
+      app: argus
   template:
     metadata:
       labels:
-        app: core
+        app: argus
     spec:
       containers:
-      - name: core
-        image: registry.boardware.com/bwc/core:0.0.13
+      - name: argus
+        image: registry.boardware.com/bwc/argus:0.0.1
         ports:
         - containerPort: 8080
         volumeMounts:
@@ -48,11 +48,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: core-svc
+  name: argus-svc
 spec:
   ports:
     - protocol: TCP
       port: 8080
       targetPort: 8080
   selector:
-    app: core
+    app: argus
