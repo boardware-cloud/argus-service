@@ -18,7 +18,7 @@ const DEFAULT_INTERVAL = 5 * 60
 
 type MonitorApi struct{}
 
-func (MonitorApi) UpdateMonitor(c *gin.Context, monitorId string, updateMonitorRequest api.UpdateMonitorRequest) {
+func (MonitorApi) UpdateMonitor(c *gin.Context, monitorId string, updateMonitorRequest api.PutMonitorRequest) {
 	middleware.GetAccount(c, func(c *gin.Context, account model.Account) {
 		method := constants.HttpMehotd(*updateMonitorRequest.Method)
 		services.UpdateMonitor(
@@ -42,7 +42,7 @@ func (MonitorApi) UpdateMonitor(c *gin.Context, monitorId string, updateMonitorR
 	})
 }
 
-func (MonitorApi) CreateMonitor(c *gin.Context, createMonitorRequest api.CreateMonitorRequest) {
+func (MonitorApi) CreateMonitor(c *gin.Context, createMonitorRequest api.PutMonitorRequest) {
 	middleware.GetAccount(c, func(c *gin.Context, account model.Account) {
 		var httpMehtod *constants.HttpMehotd
 		f.NewMayBe(createMonitorRequest.Method).Just(func(method api.HttpMethod) {
@@ -56,7 +56,7 @@ func (MonitorApi) CreateMonitor(c *gin.Context, createMonitorRequest api.CreateM
 					Name:                 createMonitorRequest.Name,
 					Description:          createMonitorRequest.Description,
 					Url:                  createMonitorRequest.Url,
-					Status:               constants.MonitorStatus(createMonitorRequest.MonitorProperties.Status),
+					Status:               constants.MonitorStatus(createMonitorRequest.Status),
 					Interval:             createMonitorRequest.Interval,
 					Timeout:              createMonitorRequest.Timeout,
 					Notifications:        NotificationsForward(createMonitorRequest.Notifications),

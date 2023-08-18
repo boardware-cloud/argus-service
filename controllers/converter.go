@@ -13,28 +13,40 @@ import (
 func MonitorBackward(monitor services.Monitor) api.Monitor {
 	method := api.HttpMethod(*monitor.HttpMethod)
 	m := api.Monitor{
-		Id: utils.UintToString(monitor.Id),
-		MonitorProperties: api.MonitorProperties{
-			Name:                 monitor.Name,
-			Description:          monitor.Description,
-			Type:                 api.MonitorType(monitor.Type),
-			Interval:             monitor.Interval,
-			Timeout:              monitor.Timeout,
-			Url:                  monitor.Url,
-			Method:               &method,
-			Notifications:        NotificationsBackward(monitor.Notifications),
-			NotificationInterval: monitor.NotificationInterval,
-			Status:               api.MonitorStatus(monitor.Status),
-		},
+		Id:                   utils.UintToString(monitor.Id),
+		Name:                 monitor.Name,
+		Description:          monitor.Description,
+		Type:                 api.MonitorType(monitor.Type),
+		Interval:             monitor.Interval,
+		Timeout:              monitor.Timeout,
+		Url:                  monitor.Url,
+		Method:               &method,
+		Notifications:        NotificationsBackward(monitor.Notifications),
+		NotificationInterval: monitor.NotificationInterval,
+		Status:               api.MonitorStatus(monitor.Status),
 	}
 	return m
 }
 
 func MonitorForward(monitor api.Monitor) services.Monitor {
+	var retries int64 = 3
+	if monitor.Retries <= 10 {
+		retries = monitor.Retries
+	}
 	method := constants.HttpMehotd(*monitor.Method)
 	return services.Monitor{
-		Id:         utils.StringToUint(monitor.Id),
-		HttpMethod: &method,
+		Id:                   utils.StringToUint(monitor.Id),
+		Name:                 monitor.Name,
+		Description:          monitor.Description,
+		Status:               constants.MonitorStatus(monitor.Status),
+		Type:                 constants.MonitorType(monitor.Type),
+		Interval:             monitor.Interval,
+		Timeout:              monitor.Timeout,
+		HttpMethod:           &method,
+		Url:                  monitor.Url,
+		Notifications:        NotificationsForward(monitor.Notifications),
+		NotificationInterval: monitor.NotificationInterval,
+		Reties:               retries,
 	}
 }
 

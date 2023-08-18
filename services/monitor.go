@@ -19,7 +19,6 @@ type Monitor struct {
 	Interval             int64
 	Timeout              int64
 	HttpMethod           *constants.HttpMehotd
-	BaseTime             int64
 	Url                  string
 	Heartbeat            int64
 	UpdatedAt            time.Time

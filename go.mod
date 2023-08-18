@@ -13,7 +13,7 @@ require (
 	gorm.io/gorm v1.25.3
 )
 
-require github.com/boardware-cloud/argus-api v0.0.0-20230818075224-9575ad2ca3d1
+require github.com/boardware-cloud/argus-api v0.0.0-20230818082702-e2f214a5abef
 
 require (
 	github.com/bwmarrin/snowflake v0.3.0 // indirect

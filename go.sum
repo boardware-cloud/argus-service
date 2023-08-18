@@ -40,6 +40,14 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/boardware-cloud/argus-api v0.0.0-20230818075224-9575ad2ca3d1 h1:/BmYUNDrABfuMlMgRJrC8KdUqW7y/d29lGn+gs4N+8I=
 github.com/boardware-cloud/argus-api v0.0.0-20230818075224-9575ad2ca3d1/go.mod h1:NHwhl/ZxM5xtnAXtZm5U2ECf7+27FOcNggIHAlfoTXc=
+github.com/boardware-cloud/argus-api v0.0.0-20230818081227-e18670adb881 h1:V+57SuJ/b3qymqOCsRv+t6w/LLMA/bGSyMhZhekd2Tc=
+github.com/boardware-cloud/argus-api v0.0.0-20230818081227-e18670adb881/go.mod h1:NHwhl/ZxM5xtnAXtZm5U2ECf7+27FOcNggIHAlfoTXc=
+github.com/boardware-cloud/argus-api v0.0.0-20230818082406-3c1e317ce5a8 h1:suNW3lo1dok4e+mgLmgrPkXmBFg/KfysaTcz/zkiBh4=
+github.com/boardware-cloud/argus-api v0.0.0-20230818082406-3c1e317ce5a8/go.mod h1:NHwhl/ZxM5xtnAXtZm5U2ECf7+27FOcNggIHAlfoTXc=
+github.com/boardware-cloud/argus-api v0.0.0-20230818082547-1a134bddeab3 h1:aQqjWZFxe1MchlGxTHzDJRy0Y6eGNHe++QilxVcYsLg=
+github.com/boardware-cloud/argus-api v0.0.0-20230818082547-1a134bddeab3/go.mod h1:NHwhl/ZxM5xtnAXtZm5U2ECf7+27FOcNggIHAlfoTXc=
+github.com/boardware-cloud/argus-api v0.0.0-20230818082702-e2f214a5abef h1:VZdJunJO7/hb/hzDEY6u2SFAQpiOUSZOEh+zIhBWgzs=
+github.com/boardware-cloud/argus-api v0.0.0-20230818082702-e2f214a5abef/go.mod h1:NHwhl/ZxM5xtnAXtZm5U2ECf7+27FOcNggIHAlfoTXc=
 github.com/boardware-cloud/common v0.0.0-20230817055338-82adc0f3d7db h1:71XC9D82CGh/3WhWogWmTo1G1hfKz9rwpYkBE8PW24Q=
 github.com/boardware-cloud/common v0.0.0-20230817055338-82adc0f3d7db/go.mod h1:Ztn+PIPt9IhKncTFySl6LOyMhCV+AseebVcV5dDE18Y=
 github.com/boardware-cloud/core v0.0.0-20230817070532-ebebc3f9ff08 h1:DKg8WwGnt7pnroFYEH/JwZ9YET9NgVdiWKLCH+AWwlE=

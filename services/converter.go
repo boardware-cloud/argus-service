@@ -9,7 +9,6 @@ func MonitorBackward(monitor model.Monitor) Monitor {
 		Description:          monitor.Description,
 		Status:               monitor.Status,
 		Url:                  monitor.Url,
-		BaseTime:             monitor.BaseTime,
 		Timeout:              monitor.Timeout,
 		Interval:             monitor.Interval,
 		Type:                 monitor.Type,
