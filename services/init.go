@@ -1,10 +1,10 @@
 package services
 
 import (
-	"github.com/boardware-cloud/common/config"
 	"github.com/boardware-cloud/common/notifications"
 	"github.com/boardware-cloud/model"
-	uptime "github.com/boardware-cloud/model/argus"
+	argus "github.com/boardware-cloud/model/argus"
+	"github.com/spf13/viper"
 
 	"gorm.io/gorm"
 )
@@ -16,25 +16,30 @@ var node UptimeNode
 var emailSender notifications.Sender
 
 func init() {
-	user := config.GetString("database.user")
-	password := config.GetString("database.password")
-	host := config.GetString("database.host")
-	port := config.GetString("database.port")
-	database := config.GetString("database.database")
-	var err error
-	DB, err = model.NewConnection(user, password, host, port, database)
+	viper.SetConfigName("env")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath("./config")
+	err := viper.ReadInConfig()
 	if err != nil {
 		panic(err)
 	}
-	// Init email sender
-	emailSender.SmtpHost = config.GetString("smtp.host")
-	emailSender.Port = config.GetString("smtp.port")
-	emailSender.Email = config.GetString("smtp.email")
-	emailSender.Password = config.GetString("smtp.password")
-	DB.AutoMigrate(&uptime.Monitor{})
-	DB.AutoMigrate(&uptime.UptimeNode{})
-	DB.AutoMigrate(&uptime.MonitoringRecord{})
-	DB.AutoMigrate(&uptime.UptimeMonitorAlert{})
+	user := viper.GetString("database.user")
+	password := viper.GetString("database.password")
+	host := viper.GetString("database.host")
+	port := viper.GetString("database.port")
+	database := viper.GetString("database.database")
+	DB, err = model.NewConnection(user, password, host, port, database)
+	emailSender.SmtpHost = viper.GetString("smtp.host")
+	emailSender.Port = viper.GetString("smtp.port")
+	emailSender.Email = viper.GetString("smtp.email")
+	emailSender.Password = viper.GetString("smtp.password")
+	if err != nil {
+		panic(err)
+	}
+	DB.AutoMigrate(&argus.Monitor{})
+	DB.AutoMigrate(&argus.UptimeNode{})
+	DB.AutoMigrate(&argus.MonitoringRecord{})
+	DB.AutoMigrate(&argus.UptimeMonitorAlert{})
 	node = NewUptimeNode()
 	node.Register()
 	go KeepAlive()
