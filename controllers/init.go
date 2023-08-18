@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"net/http"
 	"time"
 
 	api "github.com/boardware-cloud/argus-api"
@@ -19,10 +20,27 @@ func timeoutTesting(c *gin.Context) {
 	time.Sleep(duration)
 }
 
+type health struct {
+	Status string   `json:"status"`
+	Checks []string `json:"checks"`
+}
+
 func init() {
 	router = gin.Default()
 	router.Use(server.CorsMiddleware())
 	api.MonitorApiInterfaceMounter(router, &MonitorApi{})
+	router.GET("/health/ready", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, health{
+			Status: "UP",
+			Checks: make([]string, 0),
+		})
+	})
+	router.GET("/health/live", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, health{
+			Status: "UP",
+			Checks: make([]string, 0),
+		})
+	})
 	router.GET("/testing/delay/:duration", timeoutTesting)
 	router.GET("/testing/down", func(ctx *gin.Context) {
 	})
