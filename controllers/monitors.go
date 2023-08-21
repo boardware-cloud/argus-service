@@ -8,8 +8,6 @@ import (
 	"github.com/boardware-cloud/common/constants"
 	"github.com/boardware-cloud/common/utils"
 	model "github.com/boardware-cloud/core-api"
-	uptime "github.com/boardware-cloud/model/argus"
-	f "github.com/chenyunda218/golambda"
 	"github.com/gin-gonic/gin"
 )
 
@@ -37,45 +35,29 @@ func (MonitorApi) UpdateMonitor(c *gin.Context, monitorId string, updateMonitorR
 		).Just(func(data services.Monitor) {
 			c.JSON(http.StatusOK, MonitorBackward(data))
 		}).Nothing(func() {
-			c.JSON(http.StatusNotFound, gin.H{})
+			c.JSON(http.StatusNotFound, "")
 		})
 	})
 }
 
 func (MonitorApi) CreateMonitor(c *gin.Context, createMonitorRequest api.PutMonitorRequest) {
 	middleware.GetAccount(c, func(c *gin.Context, account model.Account) {
-		var httpMehtod *constants.HttpMehotd
-		f.NewMayBe(createMonitorRequest.Method).Just(func(method api.HttpMethod) {
-			httpMehtod = f.Reference(constants.HttpMehotd(method))
-		})
 		c.JSON(
 			http.StatusCreated,
 			MonitorBackward(services.CreateMonitor(
-				utils.StringToUint(account.Id), uptime.Monitor{
-					AccountId:            utils.StringToUint(account.Id),
-					Name:                 createMonitorRequest.Name,
-					Description:          createMonitorRequest.Description,
-					Url:                  createMonitorRequest.Url,
-					Status:               constants.MonitorStatus(createMonitorRequest.Status),
-					Interval:             createMonitorRequest.Interval,
-					Timeout:              createMonitorRequest.Timeout,
-					Notifications:        NotificationsForward(createMonitorRequest.Notifications),
-					Retries:              0,
-					Type:                 constants.MonitorType(createMonitorRequest.Type),
-					HttpMethod:           httpMehtod,
-					NotificationInterval: createMonitorRequest.NotificationInterval,
-				},
+				utils.StringToUint(account.Id), PutMonitorForward(createMonitorRequest),
 			)))
 	})
 }
 
 func (MonitorApi) ListMonitors(c *gin.Context, ordering api.Ordering, index int64, limit int64) {
-	middleware.GetAccount(c, func(c *gin.Context, account model.Account) {
-		c.JSON(
-			http.StatusOK,
-			MonitorListBackward(services.ListMonitor(utils.StringToUint(account.Id), index, limit)),
-		)
-	})
+	middleware.GetAccount(c,
+		func(c *gin.Context, account model.Account) {
+			c.JSON(
+				http.StatusOK,
+				MonitorListBackward(services.ListMonitor(utils.StringToUint(account.Id), index, limit)),
+			)
+		})
 }
 
 func (MonitorApi) GetMonitor(c *gin.Context, id string) {

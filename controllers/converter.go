@@ -7,7 +7,7 @@ import (
 
 	api "github.com/boardware-cloud/argus-api"
 	services "github.com/boardware-cloud/argus-service/services"
-	"github.com/chenyunda218/golambda"
+	f "github.com/chenyunda218/golambda"
 )
 
 func MonitorBackward(monitor services.Monitor) api.Monitor {
@@ -24,8 +24,33 @@ func MonitorBackward(monitor services.Monitor) api.Monitor {
 		Notifications:        NotificationsBackward(monitor.Notifications),
 		NotificationInterval: monitor.NotificationInterval,
 		Status:               api.MonitorStatus(monitor.Status),
+		Retries:              monitor.Reties,
 	}
 	return m
+}
+
+func PutMonitorForward(createMonitorRequest api.PutMonitorRequest) model.Monitor {
+	var httpMehtod *constants.HttpMehotd
+	f.NewMayBe(createMonitorRequest.Method).Just(func(method api.HttpMethod) {
+		httpMehtod = f.Reference(constants.HttpMehotd(method))
+	})
+	var retries int64 = 3
+	if createMonitorRequest.Retries <= 10 {
+		retries = createMonitorRequest.Retries
+	}
+	return model.Monitor{
+		Name:                 createMonitorRequest.Name,
+		Description:          createMonitorRequest.Description,
+		Url:                  createMonitorRequest.Url,
+		Status:               constants.MonitorStatus(createMonitorRequest.Status),
+		Interval:             createMonitorRequest.Interval,
+		Timeout:              createMonitorRequest.Timeout,
+		Notifications:        NotificationsForward(createMonitorRequest.Notifications),
+		Retries:              retries,
+		Type:                 constants.MonitorType(createMonitorRequest.Type),
+		HttpMethod:           httpMehtod,
+		NotificationInterval: createMonitorRequest.NotificationInterval,
+	}
 }
 
 func MonitorForward(monitor api.Monitor) services.Monitor {
@@ -99,7 +124,7 @@ func NotificationsBackward(notifications model.Notifications) []api.Notification
 }
 
 func MonitorListBackward(monitorList services.List[services.Monitor]) api.MonitorList {
-	list := golambda.Map(monitorList.Data, func(_ int, monitor services.Monitor) api.Monitor {
+	list := f.Map(monitorList.Data, func(_ int, monitor services.Monitor) api.Monitor {
 		return MonitorBackward(monitor)
 	})
 	return api.MonitorList{
@@ -133,7 +158,7 @@ func MonitoringRecordBackward(record services.MonitoringRecord) api.MonitoringRe
 }
 
 func MonitoringRecordListBackward(recordList services.List[services.MonitoringRecord]) api.MonitoringRecordList {
-	data := golambda.Map(recordList.Data, func(_ int, record services.MonitoringRecord) api.MonitoringRecord {
+	data := f.Map(recordList.Data, func(_ int, record services.MonitoringRecord) api.MonitoringRecord {
 		return MonitoringRecordBackward(record)
 	})
 	return api.MonitoringRecordList{
