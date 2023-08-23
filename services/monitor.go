@@ -1,12 +1,14 @@
 package services
 
 import (
+	"bytes"
 	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/boardware-cloud/common/constants"
 	model "github.com/boardware-cloud/model/argus"
+	"github.com/boardware-cloud/model/common"
 	f "github.com/chenyunda218/golambda"
 )
 
@@ -25,6 +27,8 @@ type Monitor struct {
 	Notifications        model.Notifications
 	NotificationInterval int64
 	Reties               int64
+	Body                 *string
+	Headers              *[]Pair
 }
 
 type MonitoringRecord struct {
@@ -34,11 +38,21 @@ type MonitoringRecord struct {
 	Result       constants.MonitoringResult
 	ResponseTime *int64
 	StatusCode   string
+	Body         *string
+	Headers      *[]Pair
 }
 
 func (m *Monitor) httpMonitor() model.MonitoringRecord {
 	client := &http.Client{Timeout: time.Duration(m.Timeout) * time.Second}
 	req, _ := http.NewRequest(string(*m.HttpMethod), m.Url, nil)
+	if m.Body != nil {
+		req, _ = http.NewRequest(string(*m.HttpMethod), m.Url, bytes.NewReader([]byte(*m.Body)))
+	}
+	if m.Headers != nil {
+		for _, header := range *m.Headers {
+			req.Header.Add(header.Left, header.Right)
+		}
+	}
 	start := time.Now().UnixMilli()
 	resp, err := client.Do(req)
 	checkedAt := time.Now()
@@ -50,6 +64,7 @@ func (m *Monitor) httpMonitor() model.MonitoringRecord {
 		Type:         m.Type,
 		HttpMethod:   m.HttpMethod,
 		ResponseTime: &responseTime,
+		Body:         m.Body,
 	}
 	if err != nil {
 		if resp == nil {
@@ -65,6 +80,7 @@ func (m *Monitor) httpMonitor() model.MonitoringRecord {
 			record.Result = constants.DOWN
 		}
 	}
+	defer resp.Body.Close()
 	return record
 }
 
@@ -220,7 +236,6 @@ func ListMonitoringRecords(monitorId uint, index, limit, startAt, endAt int64) L
 		ctx = ctx.Where("checked_at >= ?", time.Unix(startAt, 0))
 	}
 	if endAt != 0 {
-		fmt.Println(endAt)
 		ctx = ctx.Where("checked_at < ?", time.Unix(endAt+1, 0))
 	}
 	ctx.Count(&total)
@@ -265,6 +280,8 @@ func UpdateMonitor(
 	notifications model.Notifications,
 	notificationInterval int64,
 	status constants.MonitorStatus,
+	body *string,
+	headers *common.PairList,
 ) f.MayBe[Monitor] {
 	var monitor model.Monitor
 	monitor.ID = monitorId
@@ -286,6 +303,8 @@ func UpdateMonitor(
 	monitor.UptimeNodeId = nil
 	monitor.Status = status
 	monitor.Retries = 3
+	monitor.Body = body
+	monitor.Headers = headers
 	DB.Save(&monitor)
 	m := MonitorBackward(monitor)
 	go Spawn(m)

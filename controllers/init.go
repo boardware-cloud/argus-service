@@ -44,6 +44,14 @@ func init() {
 	router.GET("/testing/delay/:duration", timeoutTesting)
 	router.GET("/testing/down", func(ctx *gin.Context) {
 	})
+	// router.POST("/testing/post", func(ctx *gin.Context) {
+	// 	jsonData, _ := ioutil.ReadAll(ctx.Request.Body)
+	// 	fmt.Println(string(jsonData))
+	// 	var pairs []api.Pair = make([]api.Pair, 0)
+	// 	ctx.ShouldBindHeader(&pairs)
+	// 	requestDump, _ := httputil.DumpRequest(ctx.Request, false)
+	// 	fmt.Println(string(requestDump))
+	// })
 }
 
 func Run(addr ...string) {

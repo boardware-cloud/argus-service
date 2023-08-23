@@ -16,22 +16,24 @@ const DEFAULT_INTERVAL = 5 * 60
 
 type MonitorApi struct{}
 
-func (MonitorApi) UpdateMonitor(c *gin.Context, monitorId string, updateMonitorRequest api.PutMonitorRequest) {
+func (MonitorApi) UpdateMonitor(c *gin.Context, monitorId string, putMonitorRequest api.PutMonitorRequest) {
 	middleware.GetAccount(c, func(c *gin.Context, account model.Account) {
-		method := constants.HttpMehotd(*updateMonitorRequest.Method)
+		method := constants.HttpMehotd(*putMonitorRequest.Method)
 		services.UpdateMonitor(
 			utils.StringToUint(account.Id),
 			utils.StringToUint(monitorId),
-			updateMonitorRequest.Name,
-			updateMonitorRequest.Description,
+			putMonitorRequest.Name,
+			putMonitorRequest.Description,
 			constants.HTTP,
-			updateMonitorRequest.Interval,
-			updateMonitorRequest.Timeout, 0,
+			putMonitorRequest.Interval,
+			putMonitorRequest.Timeout, 0,
 			&method,
-			updateMonitorRequest.Url,
-			NotificationsForward(updateMonitorRequest.Notifications),
-			updateMonitorRequest.NotificationInterval,
-			constants.MonitorStatus(updateMonitorRequest.Status),
+			putMonitorRequest.Url,
+			NotificationsForward(putMonitorRequest.Notifications),
+			putMonitorRequest.NotificationInterval,
+			constants.MonitorStatus(putMonitorRequest.Status),
+			putMonitorRequest.Body,
+			PairListForward(putMonitorRequest.Headers),
 		).Just(func(data services.Monitor) {
 			c.JSON(http.StatusOK, MonitorBackward(data))
 		}).Nothing(func() {

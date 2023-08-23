@@ -4,6 +4,7 @@ import (
 	"github.com/boardware-cloud/common/constants"
 	"github.com/boardware-cloud/common/utils"
 	model "github.com/boardware-cloud/model/argus"
+	common "github.com/boardware-cloud/model/common"
 
 	api "github.com/boardware-cloud/argus-api"
 	services "github.com/boardware-cloud/argus-service/services"
@@ -29,49 +30,44 @@ func MonitorBackward(monitor services.Monitor) api.Monitor {
 	return m
 }
 
-func PutMonitorForward(createMonitorRequest api.PutMonitorRequest) model.Monitor {
+func PairListForward(pairList *[]api.Pair) *common.PairList {
+	if pairList == nil {
+		return nil
+	}
+	var pairs common.PairList = make(common.PairList, 0)
+	for _, pair := range *pairList {
+		pairs = append(pairs, common.Pair{
+			Left:  pair.Left,
+			Right: pair.Right,
+		})
+	}
+	return &pairs
+}
+
+func PutMonitorForward(putMonitorRequest api.PutMonitorRequest) model.Monitor {
 	var httpMehtod *constants.HttpMehotd
-	f.NewMayBe(createMonitorRequest.Method).Just(func(method api.HttpMethod) {
+	f.NewMayBe(putMonitorRequest.Method).Just(func(method api.HttpMethod) {
 		httpMehtod = f.Reference(constants.HttpMehotd(method))
 	})
 	var retries int64 = 3
-	if createMonitorRequest.Retries <= 10 {
-		retries = createMonitorRequest.Retries
+	if putMonitorRequest.Retries <= 10 {
+		retries = putMonitorRequest.Retries
 	}
-	return model.Monitor{
-		Name:                 createMonitorRequest.Name,
-		Description:          createMonitorRequest.Description,
-		Url:                  createMonitorRequest.Url,
-		Status:               constants.MonitorStatus(createMonitorRequest.Status),
-		Interval:             createMonitorRequest.Interval,
-		Timeout:              createMonitorRequest.Timeout,
-		Notifications:        NotificationsForward(createMonitorRequest.Notifications),
-		Retries:              retries,
-		Type:                 constants.MonitorType(createMonitorRequest.Type),
-		HttpMethod:           httpMehtod,
-		NotificationInterval: createMonitorRequest.NotificationInterval,
-	}
-}
 
-func MonitorForward(monitor api.Monitor) services.Monitor {
-	var retries int64 = 3
-	if monitor.Retries <= 10 {
-		retries = monitor.Retries
-	}
-	method := constants.HttpMehotd(*monitor.Method)
-	return services.Monitor{
-		Id:                   utils.StringToUint(monitor.Id),
-		Name:                 monitor.Name,
-		Description:          monitor.Description,
-		Status:               constants.MonitorStatus(monitor.Status),
-		Type:                 constants.MonitorType(monitor.Type),
-		Interval:             monitor.Interval,
-		Timeout:              monitor.Timeout,
-		HttpMethod:           &method,
-		Url:                  monitor.Url,
-		Notifications:        NotificationsForward(monitor.Notifications),
-		NotificationInterval: monitor.NotificationInterval,
-		Reties:               retries,
+	return model.Monitor{
+		Name:                 putMonitorRequest.Name,
+		Description:          putMonitorRequest.Description,
+		Url:                  putMonitorRequest.Url,
+		Status:               constants.MonitorStatus(putMonitorRequest.Status),
+		Interval:             putMonitorRequest.Interval,
+		Timeout:              putMonitorRequest.Timeout,
+		Notifications:        NotificationsForward(putMonitorRequest.Notifications),
+		Retries:              retries,
+		Type:                 constants.MonitorType(putMonitorRequest.Type),
+		HttpMethod:           httpMehtod,
+		NotificationInterval: putMonitorRequest.NotificationInterval,
+		Body:                 putMonitorRequest.Body,
+		Headers:              PairListForward(putMonitorRequest.Headers),
 	}
 }
 

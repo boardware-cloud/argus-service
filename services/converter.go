@@ -1,6 +1,23 @@
 package services
 
-import model "github.com/boardware-cloud/model/argus"
+import (
+	model "github.com/boardware-cloud/model/argus"
+	common "github.com/boardware-cloud/model/common"
+	f "github.com/chenyunda218/golambda"
+)
+
+func PairListBackward(pairList *common.PairList) *[]Pair {
+	if pairList == nil {
+		return nil
+	}
+	pairs := f.Map(*pairList, func(_ int, pair common.Pair) Pair {
+		return Pair{
+			Left:  pair.Left,
+			Right: pair.Right,
+		}
+	})
+	return &pairs
+}
 
 func MonitorBackward(monitor model.Monitor) Monitor {
 	return Monitor{
@@ -17,6 +34,8 @@ func MonitorBackward(monitor model.Monitor) Monitor {
 		Notifications:        monitor.Notifications,
 		NotificationInterval: monitor.NotificationInterval,
 		Reties:               monitor.Retries,
+		Body:                 monitor.Body,
+		Headers:              PairListBackward(monitor.Headers),
 	}
 }
 
@@ -37,5 +56,6 @@ func MonitoringResultBackward(m model.MonitoringRecord) MonitoringRecord {
 		CheckedAt:    m.CheckedAt,
 		StatusCode:   m.StatusCode,
 		ResponseTime: m.ResponseTime,
+		Body:         m.Body,
 	}
 }
