@@ -38,6 +38,7 @@ func MonitorBackward(monitor services.Monitor) api.Monitor {
 		Status:               api.MonitorStatus(monitor.Status),
 		Retries:              monitor.Reties,
 		Headers:              headers,
+		AcceptedStatusCodes:  monitor.AcceptedStatusCodes,
 	}
 	return m
 }
@@ -54,6 +55,17 @@ func PairListForward(pairList *[]api.Pair) *common.PairList {
 		})
 	}
 	return &pairs
+}
+
+func StringListForward(ss *[]string) *common.StringList {
+	if ss == nil {
+		return nil
+	}
+	var list common.StringList = make(common.StringList, 0)
+	for _, s := range *ss {
+		list = append(list, s)
+	}
+	return &list
 }
 
 func PairListBackward(pairList *common.PairList) *[]api.Pair {
@@ -93,6 +105,7 @@ func PutMonitorForward(putMonitorRequest api.PutMonitorRequest) model.Monitor {
 		NotificationInterval: putMonitorRequest.NotificationInterval,
 		Body:                 nil,
 		Headers:              PairListForward(putMonitorRequest.Headers),
+		AcceptedStatusCodes:  StringListForward(putMonitorRequest.AcceptedStatusCodes),
 	}
 }
 

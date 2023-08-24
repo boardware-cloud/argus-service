@@ -10,16 +10,19 @@ func PairListBackward(pairList *common.PairList) *[]Pair {
 	if pairList == nil {
 		return nil
 	}
-	pairs := f.Map(*pairList, func(_ int, pair common.Pair) Pair {
+	return f.Reference(f.Map(*pairList, func(_ int, pair common.Pair) Pair {
 		return Pair{
 			Left:  pair.Left,
 			Right: pair.Right,
 		}
-	})
-	return &pairs
+	}))
 }
 
 func MonitorBackward(monitor model.Monitor) Monitor {
+	var acceptedStatusCodes *[]string
+	if monitor.AcceptedStatusCodes != nil {
+		acceptedStatusCodes = (*[]string)(monitor.AcceptedStatusCodes)
+	}
 	return Monitor{
 		Id:                   monitor.ID,
 		Name:                 monitor.Name,
@@ -36,6 +39,7 @@ func MonitorBackward(monitor model.Monitor) Monitor {
 		Reties:               monitor.Retries,
 		Body:                 monitor.Body,
 		Headers:              PairListBackward(monitor.Headers),
+		AcceptedStatusCodes:  acceptedStatusCodes,
 	}
 }
 

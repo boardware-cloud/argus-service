@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"fmt"
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/boardware-cloud/common/constants"
 	model "github.com/boardware-cloud/model/argus"
-	"github.com/boardware-cloud/model/common"
 	f "github.com/chenyunda218/golambda"
 )
 
@@ -29,6 +30,7 @@ type Monitor struct {
 	Reties               int64
 	Body                 *string
 	Headers              *[]Pair
+	AcceptedStatusCodes  *[]string
 }
 
 type MonitoringRecord struct {
@@ -74,13 +76,51 @@ func (m *Monitor) httpMonitor() model.MonitoringRecord {
 		}
 	} else {
 		record.StatusCode = fmt.Sprint(resp.StatusCode)
-		if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+		if checkAccepted(m.AcceptedStatusCodes, resp.StatusCode) {
 			record.Result = constants.OK
 		} else {
 			record.Result = constants.DOWN
 		}
 	}
 	return record
+}
+
+func checkAccepted(acceptedStatusCodes *[]string, statusCode int) bool {
+	if acceptedStatusCodes != nil && len(*acceptedStatusCodes) != 0 {
+		for _, code := range *acceptedStatusCodes {
+			if checkAcceptedStatusCode(code, statusCode) {
+				return true
+			}
+		}
+	}
+	if statusCode >= 200 && statusCode < 300 {
+		return true
+	}
+	return false
+}
+
+func checkAcceptedStatusCode(acceptedStatusCode string, statusCode int) bool {
+	codes := strings.Split(acceptedStatusCode, "-")
+	if len(codes) == 1 {
+		return codes[0] == strconv.Itoa(statusCode)
+	}
+	left, err := strconv.Atoi(codes[0])
+	if err != nil {
+		return false
+	}
+	right, err := strconv.Atoi(codes[len(codes)-1])
+	if err != nil {
+		return false
+	}
+	if left > right {
+		temp := left
+		left = right
+		right = temp
+	}
+	if statusCode >= left && statusCode <= right {
+		return true
+	}
+	return false
 }
 
 func (m *Monitor) Notification(record model.MonitoringRecord) {
@@ -104,7 +144,7 @@ func (m *Monitor) Notification(record model.MonitoringRecord) {
 			switch notifiction.Type {
 			case constants.EMAIL:
 				emailSender.SendHtml(
-					"dan.chen@boardware.com",
+					emailSender.Email,
 					alert.Subject,
 					alert.Message,
 					notifiction.EmailReceivers.To,
@@ -268,42 +308,19 @@ func DeleteMonitor(accountId, monitorId uint) {
 func UpdateMonitor(
 	accountId,
 	monitorId uint,
-	name string,
-	description string,
-	Type constants.MonitorType,
-	interval int64,
-	timeout int64,
-	retries int64,
-	httpMethod *constants.HttpMehotd,
-	url string,
-	notifications model.Notifications,
-	notificationInterval int64,
-	status constants.MonitorStatus,
-	body *string,
-	headers *common.PairList,
+	monitor model.Monitor,
 ) f.MayBe[Monitor] {
-	var monitor model.Monitor
-	monitor.ID = monitorId
-	monitor.AccountId = accountId
-	ctx := DB.Where("account_id = ?", accountId).Find(&monitor, monitorId)
+	var oldMonitor model.Monitor
+	oldMonitor.ID = monitorId
+	oldMonitor.AccountId = accountId
+	ctx := DB.Where("account_id = ?", accountId).Find(&oldMonitor, monitorId)
 	if ctx.RowsAffected == 0 {
 		return f.MayBe[Monitor]{}
 	}
-	monitor.Name = name
-	monitor.Description = description
-	monitor.Type = Type
-	monitor.Interval = interval
-	monitor.Timeout = timeout
-	monitor.Retries = retries
-	monitor.HttpMethod = httpMethod
-	monitor.Url = url
-	monitor.Notifications = notifications
-	monitor.NotificationInterval = notificationInterval
-	monitor.UptimeNodeId = nil
-	monitor.Status = status
-	monitor.Retries = 3
-	monitor.Body = body
-	monitor.Headers = headers
+	monitor.AccountId = accountId
+	monitor.ID = monitorId
+	monitor.CreatedAt = oldMonitor.CreatedAt
+	monitor.UpdatedAt = oldMonitor.UpdatedAt
 	DB.Save(&monitor)
 	m := MonitorBackward(monitor)
 	go Spawn(m)

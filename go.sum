@@ -56,6 +56,10 @@ github.com/boardware-cloud/argus-api v0.0.0-20230823020354-77a5fea91bea h1:v6uGZ
 github.com/boardware-cloud/argus-api v0.0.0-20230823020354-77a5fea91bea/go.mod h1:NHwhl/ZxM5xtnAXtZm5U2ECf7+27FOcNggIHAlfoTXc=
 github.com/boardware-cloud/argus-api v0.0.0-20230823042424-cb3ab4a6ae75 h1:l1rIa9wLKVvK1u+8k0VkVv3DULGPavs15QBVsND4XMQ=
 github.com/boardware-cloud/argus-api v0.0.0-20230823042424-cb3ab4a6ae75/go.mod h1:NHwhl/ZxM5xtnAXtZm5U2ECf7+27FOcNggIHAlfoTXc=
+github.com/boardware-cloud/argus-api v0.0.0-20230824071708-28dcc8273268 h1:Zn8tFIMvobp7z4lEwnySb5llCdN70I8twZr6kS18loA=
+github.com/boardware-cloud/argus-api v0.0.0-20230824071708-28dcc8273268/go.mod h1:NHwhl/ZxM5xtnAXtZm5U2ECf7+27FOcNggIHAlfoTXc=
+github.com/boardware-cloud/argus-api v0.0.0-20230824072255-6f6daf90e91b h1:YBCPPBSQIz1/LmhnT3uyjfvljDFNr9v8PrFT26G5oOs=
+github.com/boardware-cloud/argus-api v0.0.0-20230824072255-6f6daf90e91b/go.mod h1:NHwhl/ZxM5xtnAXtZm5U2ECf7+27FOcNggIHAlfoTXc=
 github.com/boardware-cloud/common v0.0.0-20230817055338-82adc0f3d7db h1:71XC9D82CGh/3WhWogWmTo1G1hfKz9rwpYkBE8PW24Q=
 github.com/boardware-cloud/common v0.0.0-20230817055338-82adc0f3d7db/go.mod h1:Ztn+PIPt9IhKncTFySl6LOyMhCV+AseebVcV5dDE18Y=
 github.com/boardware-cloud/common v0.0.0-20230823060450-b9e5e290e867 h1:Hi+8hcO5SuDeKJszaxxqrDpGwPBXU6KR0Mm+WmpgfjM=
@@ -76,6 +80,8 @@ github.com/boardware-cloud/model v0.0.0-20230823060712-4e18a5905601 h1:J7anMhPxU
 github.com/boardware-cloud/model v0.0.0-20230823060712-4e18a5905601/go.mod h1:a92+G+0ovVxP2V+TsxjZw8NBXSkg0w/SI8bbCTgRzOs=
 github.com/boardware-cloud/model v0.0.0-20230823061215-5cb6a936c7fb h1:MKLev29dJAibnzc+yBw4zmrqOcjJSAtO/b6KdamBqlY=
 github.com/boardware-cloud/model v0.0.0-20230823061215-5cb6a936c7fb/go.mod h1:eqwgz1J0L6VkxJchM8cIdm8zH/B6PwaXGTTcEkiMtDc=
+github.com/boardware-cloud/model v0.0.0-20230824072348-cf4688ae47a9 h1:TKeJa5ErEGnLwi2ZcYYmnPg5nisq+uV0/VraoOtq9FQ=
+github.com/boardware-cloud/model v0.0.0-20230824072348-cf4688ae47a9/go.mod h1:eqwgz1J0L6VkxJchM8cIdm8zH/B6PwaXGTTcEkiMtDc=
 github.com/bwmarrin/snowflake v0.3.0 h1:xm67bEhkKh6ij1790JB83OujPR5CzNe8QuQqAgISZN0=
 github.com/bwmarrin/snowflake v0.3.0/go.mod h1:NdZxfVWX+oR6y2K0o6qAYv6gIOP9rjG0/E9WsDpxqwE=
 github.com/bytedance/sonic v1.5.0/go.mod h1:ED5hyg4y6t3/9Ku1R6dU/4KyJ48DZ4jPhfY1O2AihPM=

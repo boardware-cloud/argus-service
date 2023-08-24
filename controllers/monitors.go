@@ -5,7 +5,6 @@ import (
 
 	api "github.com/boardware-cloud/argus-api"
 	"github.com/boardware-cloud/argus-service/services"
-	"github.com/boardware-cloud/common/constants"
 	"github.com/boardware-cloud/common/utils"
 	model "github.com/boardware-cloud/core-api"
 	"github.com/gin-gonic/gin"
@@ -18,22 +17,10 @@ type MonitorApi struct{}
 
 func (MonitorApi) UpdateMonitor(c *gin.Context, monitorId string, putMonitorRequest api.PutMonitorRequest) {
 	middleware.GetAccount(c, func(c *gin.Context, account model.Account) {
-		method := constants.HttpMehotd(*putMonitorRequest.Method)
 		services.UpdateMonitor(
 			utils.StringToUint(account.Id),
 			utils.StringToUint(monitorId),
-			putMonitorRequest.Name,
-			putMonitorRequest.Description,
-			constants.HTTP,
-			putMonitorRequest.Interval,
-			putMonitorRequest.Timeout, 0,
-			&method,
-			putMonitorRequest.Url,
-			NotificationsForward(putMonitorRequest.Notifications),
-			putMonitorRequest.NotificationInterval,
-			constants.MonitorStatus(putMonitorRequest.Status),
-			nil,
-			PairListForward(putMonitorRequest.Headers),
+			PutMonitorForward(putMonitorRequest),
 		).Just(func(data services.Monitor) {
 			c.JSON(http.StatusOK, MonitorBackward(data))
 		}).Nothing(func() {

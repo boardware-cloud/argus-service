@@ -6,14 +6,14 @@ require (
 	github.com/boardware-cloud/common v0.0.0-20230823061101-698648f3cc6a
 	github.com/boardware-cloud/core v0.0.0-20230817070532-ebebc3f9ff08
 	github.com/boardware-cloud/core-api v0.0.0-20230816043420-1362b048f015
-	github.com/boardware-cloud/model v0.0.0-20230823061215-5cb6a936c7fb
+	github.com/boardware-cloud/model v0.0.0-20230824072348-cf4688ae47a9
 	github.com/chenyunda218/golambda v0.0.0-20230809035428-25245dc9a8bd
 	github.com/gin-gonic/gin v1.9.1
 	github.com/spf13/viper v1.16.0
 	gorm.io/gorm v1.25.4
 )
 
-require github.com/boardware-cloud/argus-api v0.0.0-20230823042424-cb3ab4a6ae75
+require github.com/boardware-cloud/argus-api v0.0.0-20230824072255-6f6daf90e91b
 
 require (
 	github.com/bwmarrin/snowflake v0.3.0 // indirect
