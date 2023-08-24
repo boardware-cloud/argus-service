@@ -32,7 +32,7 @@ func (MonitorApi) UpdateMonitor(c *gin.Context, monitorId string, putMonitorRequ
 			NotificationsForward(putMonitorRequest.Notifications),
 			putMonitorRequest.NotificationInterval,
 			constants.MonitorStatus(putMonitorRequest.Status),
-			putMonitorRequest.Body,
+			nil,
 			PairListForward(putMonitorRequest.Headers),
 		).Just(func(data services.Monitor) {
 			c.JSON(http.StatusOK, MonitorBackward(data))

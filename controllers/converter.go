@@ -13,6 +13,16 @@ import (
 
 func MonitorBackward(monitor services.Monitor) api.Monitor {
 	method := api.HttpMethod(*monitor.HttpMethod)
+	var headers *[]api.Pair
+	if monitor.Headers != nil {
+		*headers = make([]api.Pair, 0)
+		for _, header := range *monitor.Headers {
+			*headers = append(*headers, api.Pair{
+				Left:  header.Left,
+				Right: header.Right,
+			})
+		}
+	}
 	m := api.Monitor{
 		Id:                   utils.UintToString(monitor.Id),
 		Name:                 monitor.Name,
@@ -26,6 +36,7 @@ func MonitorBackward(monitor services.Monitor) api.Monitor {
 		NotificationInterval: monitor.NotificationInterval,
 		Status:               api.MonitorStatus(monitor.Status),
 		Retries:              monitor.Reties,
+		Headers:              headers,
 	}
 	return m
 }
@@ -44,6 +55,20 @@ func PairListForward(pairList *[]api.Pair) *common.PairList {
 	return &pairs
 }
 
+func PairListBackward(pairList *common.PairList) *[]api.Pair {
+	if pairList == nil {
+		return nil
+	}
+	var pairs []api.Pair = make([]api.Pair, 0)
+	for _, pair := range *pairList {
+		pairs = append(pairs, api.Pair{
+			Left:  pair.Left,
+			Right: pair.Right,
+		})
+	}
+	return &pairs
+}
+
 func PutMonitorForward(putMonitorRequest api.PutMonitorRequest) model.Monitor {
 	var httpMehtod *constants.HttpMehotd
 	f.NewMayBe(putMonitorRequest.Method).Just(func(method api.HttpMethod) {
@@ -53,7 +78,6 @@ func PutMonitorForward(putMonitorRequest api.PutMonitorRequest) model.Monitor {
 	if putMonitorRequest.Retries <= 10 {
 		retries = putMonitorRequest.Retries
 	}
-
 	return model.Monitor{
 		Name:                 putMonitorRequest.Name,
 		Description:          putMonitorRequest.Description,
@@ -66,7 +90,7 @@ func PutMonitorForward(putMonitorRequest api.PutMonitorRequest) model.Monitor {
 		Type:                 constants.MonitorType(putMonitorRequest.Type),
 		HttpMethod:           httpMehtod,
 		NotificationInterval: putMonitorRequest.NotificationInterval,
-		Body:                 putMonitorRequest.Body,
+		Body:                 nil,
 		Headers:              PairListForward(putMonitorRequest.Headers),
 	}
 }
