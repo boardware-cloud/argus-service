@@ -80,7 +80,6 @@ func (m *Monitor) httpMonitor() model.MonitoringRecord {
 			record.Result = constants.DOWN
 		}
 	}
-	defer resp.Body.Close()
 	return record
 }
 

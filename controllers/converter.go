@@ -15,13 +15,14 @@ func MonitorBackward(monitor services.Monitor) api.Monitor {
 	method := api.HttpMethod(*monitor.HttpMethod)
 	var headers *[]api.Pair
 	if monitor.Headers != nil {
-		*headers = make([]api.Pair, 0)
+		var hs []api.Pair
 		for _, header := range *monitor.Headers {
-			*headers = append(*headers, api.Pair{
+			hs = append(hs, api.Pair{
 				Left:  header.Left,
 				Right: header.Right,
 			})
 		}
+		headers = &hs
 	}
 	m := api.Monitor{
 		Id:                   utils.UintToString(monitor.Id),

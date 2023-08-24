@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: argus
-        image: registry.boardware.com/bwc/argus:0.0.5
+        image: registry.boardware.com/bwc/argus:0.0.6
         ports:
         - containerPort: 8080
         volumeMounts:
