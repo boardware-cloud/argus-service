@@ -92,6 +92,7 @@ func checkAccepted(acceptedStatusCodes *[]string, statusCode int) bool {
 				return true
 			}
 		}
+		return false
 	}
 	if statusCode >= 200 && statusCode < 300 {
 		return true
