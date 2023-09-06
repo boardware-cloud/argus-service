@@ -6,7 +6,8 @@ import (
 	api "github.com/boardware-cloud/argus-api"
 	"github.com/boardware-cloud/argus-service/services"
 	"github.com/boardware-cloud/common/utils"
-	model "github.com/boardware-cloud/core-api"
+	"github.com/boardware-cloud/middleware"
+	model "github.com/boardware-cloud/model/core"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,7 +20,7 @@ func (MonitorApi) UpdateMonitor(c *gin.Context, monitorId string, putMonitorRequ
 	middleware.GetAccount(c,
 		func(c *gin.Context, account model.Account) {
 			services.UpdateMonitor(
-				utils.StringToUint(account.Id),
+				account.ID,
 				utils.StringToUint(monitorId),
 				PutMonitorForward(putMonitorRequest),
 			).Just(func(data services.Monitor) {
@@ -36,7 +37,7 @@ func (MonitorApi) CreateMonitor(c *gin.Context, createMonitorRequest api.PutMoni
 			c.JSON(
 				http.StatusCreated,
 				MonitorBackward(services.CreateMonitor(
-					utils.StringToUint(account.Id), PutMonitorForward(createMonitorRequest),
+					account.ID, PutMonitorForward(createMonitorRequest),
 				)))
 		})
 }
@@ -46,7 +47,7 @@ func (MonitorApi) ListMonitors(c *gin.Context, ordering api.Ordering, index int6
 		func(c *gin.Context, account model.Account) {
 			c.JSON(
 				http.StatusOK,
-				MonitorListBackward(services.ListMonitor(utils.StringToUint(account.Id), index, limit)),
+				MonitorListBackward(services.ListMonitor(account.ID, index, limit)),
 			)
 		})
 }
@@ -55,7 +56,7 @@ func (MonitorApi) GetMonitor(c *gin.Context, id string) {
 	middleware.GetAccount(c,
 		func(c *gin.Context, account model.Account) {
 			services.GetMonitor(
-				utils.StringToUint(account.Id),
+				account.ID,
 				utils.StringToUint(id),
 			).Just(func(data services.Monitor) {
 				c.JSON(
@@ -71,7 +72,7 @@ func (MonitorApi) GetMonitor(c *gin.Context, id string) {
 func (MonitorApi) DeleteMonitor(c *gin.Context, id string) {
 	middleware.GetAccount(c,
 		func(c *gin.Context, account model.Account) {
-			services.DeleteMonitor(utils.StringToUint(account.Id), utils.StringToUint(id))
+			services.DeleteMonitor(account.ID, utils.StringToUint(id))
 			c.AbortWithStatus(http.StatusNoContent)
 		})
 }
@@ -80,7 +81,7 @@ func (MonitorApi) ListMonitoringRecords(c *gin.Context, id string, index, limit,
 	middleware.GetAccount(c,
 		func(c *gin.Context, account model.Account) {
 			services.GetMonitor(
-				utils.StringToUint(account.Id),
+				account.ID,
 				utils.StringToUint(id),
 			).Just(
 				func(data services.Monitor) {

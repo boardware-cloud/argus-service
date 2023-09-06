@@ -37,7 +37,6 @@ func MonitorBackward(monitor model.Monitor) Monitor {
 		Notifications:        monitor.Notifications,
 		NotificationInterval: monitor.NotificationInterval,
 		Reties:               monitor.Retries,
-		Body:                 monitor.Body,
 		Headers:              PairListBackward(monitor.Headers),
 		AcceptedStatusCodes:  acceptedStatusCodes,
 	}

@@ -103,7 +103,6 @@ func PutMonitorForward(putMonitorRequest api.PutMonitorRequest) model.Monitor {
 		Type:                 constants.MonitorType(putMonitorRequest.Type),
 		HttpMethod:           httpMehtod,
 		NotificationInterval: putMonitorRequest.NotificationInterval,
-		Body:                 nil,
 		Headers:              PairListForward(putMonitorRequest.Headers),
 		AcceptedStatusCodes:  StringListForward(putMonitorRequest.AcceptedStatusCodes),
 	}

@@ -36,6 +36,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	argus.Init(DB)
 	DB.AutoMigrate(&argus.Monitor{})
 	DB.AutoMigrate(&argus.UptimeNode{})
 	DB.AutoMigrate(&argus.MonitoringRecord{})
