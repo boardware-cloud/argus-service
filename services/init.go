@@ -1,9 +1,11 @@
 package services
 
 import (
+	"github.com/boardware-cloud/common/constants"
 	"github.com/boardware-cloud/common/notifications"
 	"github.com/boardware-cloud/model"
 	argus "github.com/boardware-cloud/model/argus"
+	"github.com/boardware-cloud/model/billing"
 	"github.com/spf13/viper"
 
 	"gorm.io/gorm"
@@ -14,6 +16,10 @@ var DB *gorm.DB
 var node UptimeNode
 
 var emailSender notifications.Sender
+
+var serviceTitle = "Uptime monitor"
+var serviceDescription = "Uptime monitoring system"
+var serviceUrl = "/uptime"
 
 func init() {
 	viper.SetConfigName("env")
@@ -37,10 +43,14 @@ func init() {
 		panic(err)
 	}
 	argus.Init(DB)
-	DB.AutoMigrate(&argus.Monitor{})
-	DB.AutoMigrate(&argus.UptimeNode{})
-	DB.AutoMigrate(&argus.MonitoringRecord{})
-	DB.AutoMigrate(&argus.UptimeMonitorAlert{})
+	// Billing configuartion
+	billing.Init(DB)
+	billing.AutoMigrate(constants.ARGUS,
+		serviceTitle,
+		serviceDescription,
+		serviceUrl,
+		constants.SAAS,
+	)
 	node = NewUptimeNode()
 	node.Register()
 	go KeepAlive()

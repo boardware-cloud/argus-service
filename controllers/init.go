@@ -13,7 +13,10 @@ func init() {
 	router = gin.Default()
 	router.Use(server.CorsMiddleware())
 	middleware.Health(router)
-	api.MonitorApiInterfaceMounter(router, &MonitorApi{})
+	var monitorApi = &MonitorApi{}
+	api.MonitorApiInterfaceMounter(router, monitorApi)
+	var reservedApi = &ReservedApi{}
+	api.ReservedApiInterfaceMounter(router, reservedApi)
 }
 
 func Run(addr ...string) {

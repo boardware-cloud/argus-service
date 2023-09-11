@@ -44,6 +44,15 @@ type MonitoringRecord struct {
 	Headers      *[]Pair
 }
 
+func CreateReserved(accountId uint, startAt, expiredAt int64) model.ReservedMonitor {
+	var reserved model.ReservedMonitor
+	reserved.AccountId = accountId
+	reserved.StartAt = time.Unix(startAt, 0)
+	reserved.ExpiredAt = time.Unix(expiredAt, 0)
+	DB.Save(&reserved)
+	return reserved
+}
+
 func (m *Monitor) httpMonitor() model.MonitoringRecord {
 	client := &http.Client{Timeout: time.Duration(m.Timeout) * time.Second}
 	req, _ := http.NewRequest(string(*m.HttpMethod), m.Url, nil)
