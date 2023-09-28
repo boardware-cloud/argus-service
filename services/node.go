@@ -25,28 +25,6 @@ type UptimeNode struct {
 func NewUptimeNode() UptimeNode {
 	return UptimeNode{}
 }
-
-func Spawn(monitor Monitor) {
-	tx := DB.Model(&model.Monitor{}).Where(
-		"id = ? AND uptime_node_id IS NULL AND status = 'ACTIVED'",
-		monitor.Id).Update("uptime_node_id", node.ID)
-	m := GetMonitorById(monitor.Id)
-	if m.Data == nil {
-		return
-	}
-	monitor.UpdatedAt = m.Data.UpdatedAt
-	records := ListMonitoringRecords(monitor.Id, 0, 1, 0, 0)
-	if len(records.Data) > 0 {
-		record := records.Data[0]
-		time.Sleep(time.Duration(record.CheckedAt.Unix()+monitor.Interval-time.Now().Unix()) * time.Second)
-	}
-	if tx.RowsAffected != 0 {
-		for monitor.Check() {
-			time.Sleep(time.Duration(monitor.Interval) * time.Second)
-		}
-	}
-}
-
 func RecoverNode(id uint) {
 	DB.Transaction(func(tx *gorm.DB) error {
 		node := model.UptimeNode{}
@@ -78,7 +56,7 @@ func CheckMembers() {
 
 func CheckMontiors() {
 	for _, monitor := range OrphanMonitor() {
-		go Spawn(monitor)
+		go monitor.Spawn()
 	}
 }
 

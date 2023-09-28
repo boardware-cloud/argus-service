@@ -44,6 +44,45 @@ type MonitoringRecord struct {
 	Headers      *[]Pair
 }
 
+func (monitor Monitor) Spawn() {
+	tx := DB.Model(&model.Monitor{}).Where(
+		"id = ? AND uptime_node_id IS NULL AND status = 'ACTIVED'",
+		monitor.Id).Update("uptime_node_id", node.ID)
+	m := GetMonitorById(monitor.Id)
+	if m.Data == nil {
+		return
+	}
+	monitor.UpdatedAt = m.Data.UpdatedAt
+	records := ListMonitoringRecords(monitor.Id, 0, 1, 0, 0)
+	if len(records.Data) > 0 {
+		record := records.Data[0]
+		time.Sleep(time.Duration(record.CheckedAt.Unix()+monitor.Interval-time.Now().Unix()) * time.Second)
+	}
+	c := make(chan int, 2)
+	if tx.RowsAffected != 0 {
+		pubsub := rdb.Subscribe(ctx, fmt.Sprintf("monitor:%d", monitor.Id))
+		defer pubsub.Close()
+		go func() {
+			_, err := pubsub.ReceiveMessage(ctx)
+			if err != nil {
+				panic(err)
+			}
+			c <- 0
+		}()
+		for monitor.Check() {
+			go func() {
+				time.Sleep(time.Duration(monitor.Interval) * time.Second)
+				c <- 1
+			}()
+			message := <-c
+			if message == 0 {
+				fmt.Println("close")
+				break
+			}
+		}
+	}
+}
+
 func CreateReserved(accountId uint, startAt, expiredAt int64) model.ReservedMonitor {
 	var reserved model.ReservedMonitor
 	reserved.AccountId = accountId
@@ -202,7 +241,7 @@ func CreateMonitor(
 	monitor.Retries = 3
 	DB.Save(&monitor)
 	m := MonitorBackward(monitor)
-	go Spawn(m)
+	go m.Spawn()
 	return m
 }
 
@@ -333,7 +372,7 @@ func UpdateMonitor(
 	monitor.UpdatedAt = oldMonitor.UpdatedAt
 	DB.Save(&monitor)
 	m := MonitorBackward(monitor)
-	go Spawn(m)
+	go m.Spawn()
 	return f.MayBe[Monitor]{
 		Data: &m,
 	}
