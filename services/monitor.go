@@ -53,6 +53,10 @@ func (monitor Monitor) Spawn() {
 		return
 	}
 	monitor.UpdatedAt = m.Data.UpdatedAt
+	err := rdb.Publish(ctx, fmt.Sprintf("monitor:%d", monitor.Id), "close").Err()
+	if err != nil {
+		panic(err)
+	}
 	records := ListMonitoringRecords(monitor.Id, 0, 1, 0, 0)
 	if len(records.Data) > 0 {
 		record := records.Data[0]
