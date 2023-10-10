@@ -3,26 +3,24 @@ module github.com/boardware-cloud/argus-service
 go 1.20
 
 require (
-	github.com/boardware-cloud/common v0.0.0-20230911013217-032a52835521
-	github.com/boardware-cloud/model v0.0.0-20230907080909-f27bafb13781
-	github.com/chenyunda218/golambda v0.0.0-20230809035428-25245dc9a8bd
+	github.com/boardware-cloud/common v0.0.0-20231010074109-e48c7fc51b44
+	github.com/boardware-cloud/model v0.0.0-20231010084555-94273e2aa5db
+	github.com/chenyunda218/golambda v0.0.0-20230809035428-25245dc9a8bd // indirect
 	github.com/gin-gonic/gin v1.9.1
 	github.com/spf13/viper v1.16.0
 	gorm.io/gorm v1.25.4
 )
 
 require (
-	github.com/boardware-cloud/argus-api v0.0.0-20230907084419-96a2f781da5f
-	github.com/boardware-cloud/middleware v0.0.0-20230907024424-0903d0d50c7a
+	github.com/boardware-cloud/argus-api v0.0.0-20231010084851-b790716ae432
+	github.com/boardware-cloud/middleware v0.0.0-20231010081117-2a53e05dcd39
 )
 
 require (
 	github.com/bwmarrin/snowflake v0.3.0 // indirect
 	github.com/bytedance/sonic v1.10.0 // indirect
-	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
 	github.com/chenzhuoyu/iasm v0.9.0 // indirect
-	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/fxamacker/cbor/v2 v2.5.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
@@ -50,7 +48,6 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.1.0 // indirect
-	github.com/redis/go-redis/v9 v9.2.1 // indirect
 	github.com/spf13/afero v1.9.5 // indirect
 	github.com/spf13/cast v1.5.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
