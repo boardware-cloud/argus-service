@@ -14,14 +14,6 @@ type ArgusConfig struct {
 	MonitorConfig MonitorConfig `json:"config"`
 }
 
-func (a *ArgusConfig) FromEntity(argus argusModel.Argus) ArgusConfig {
-	a.Name = argus.Name
-	a.Description = argus.Description
-	a.Type = string(argus.Type)
-	a.Status = string(argus.Status)
-	return *a
-}
-
 func (a ArgusConfig) ToEntity(account core.Account) argusModel.Argus {
 	argus := argusModel.Argus{
 		Type:        constants.MonitorType(a.Type),

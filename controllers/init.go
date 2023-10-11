@@ -17,7 +17,7 @@ var db *gorm.DB
 func Init(inject context.Context) {
 	db = inject.Value("db").(*gorm.DB)
 	router = gin.Default()
-	router.Use(middleware.Auth())
+	// router.Use(middleware.Auth())
 	router.Use(middleware.CorsMiddleware())
 	middleware.Health(router)
 	var monitorApi = &MonitorApi{}

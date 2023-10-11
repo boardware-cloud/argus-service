@@ -1,11 +1,65 @@
 package controllers
 
 import (
+	"encoding/json"
+	"fmt"
+
 	api "github.com/boardware-cloud/argus-api"
 	"github.com/boardware-cloud/argus-service/argus"
 	"github.com/boardware-cloud/common/config"
 	"github.com/boardware-cloud/common/constants"
+	argusModel "github.com/boardware-cloud/model/argus"
+	"github.com/boardware-cloud/model/common"
 )
+
+func Convert(from any) any {
+	switch f := from.(type) {
+	case api.PutMonitorRequest:
+		return MonitorConfigConvert(f)
+	case api.PingMonitor:
+		return PingMonitorConfigConvert(f)
+	case api.HttpMonitor:
+		return HttpMonitorConfigConvert(f)
+	case argus.Argus:
+		return MonitorBackward(f)
+	case common.Pagination:
+		return PaginationBackward(f)
+	}
+	return nil
+}
+
+func PaginationBackward(p common.Pagination) api.Pagination {
+	return api.Pagination{
+		Index: p.Index,
+		Limit: p.Limit,
+		Total: p.Total,
+	}
+}
+
+func MonitorBackward(a argus.Argus) api.Monitor {
+	fmt.Println(a.ID())
+	apiModel := api.Monitor{
+		Id:          a.ID(),
+		Name:        a.Name(),
+		Description: a.Description(),
+		Type:        api.MonitorType(a.Type()),
+	}
+	switch argusMonitor := a.Monitor().(type) {
+	case *argus.HttpMonitor:
+		m := argusMonitor.Entity().(*argusModel.HttpMonitor)
+		j, _ := json.Marshal(m)
+		apiHttp := api.HttpMonitor{}
+		json.Unmarshal(j, &apiHttp)
+		apiModel.HttpMonitor = &apiHttp
+	case *argus.PingMonitor:
+		m := argusMonitor.Entity().(*argusModel.PingMonitor)
+		j, _ := json.Marshal(m)
+		apiPing := api.PingMonitor{}
+		json.Unmarshal(j, &apiPing)
+		apiModel.PingMonitor = &apiPing
+	}
+	return apiModel
+}
 
 func MonitorConfigConvert(raw api.PutMonitorRequest) argus.ArgusConfig {
 	var monitorConfig argus.MonitorConfig

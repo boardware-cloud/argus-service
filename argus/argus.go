@@ -1,10 +1,11 @@
 package argus
 
 import (
-	"fmt"
 	"sync"
 	"time"
 
+	"github.com/boardware-cloud/common/constants"
+	"github.com/boardware-cloud/common/utils"
 	argusModel "github.com/boardware-cloud/model/argus"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -17,8 +18,6 @@ const (
 	CHECK_MONITORS_INTERVAL = 10
 )
 
-var db *gorm.DB
-
 type Node struct {
 	Entity argusModel.ArgusNode
 }
@@ -28,22 +27,72 @@ func (node *Node) Beat() {
 	db.Save(&node.Entity)
 }
 
-func (n Node) Spawn() {
-
+func NewArgus(entity argusModel.Argus) Argus {
+	var a Argus
+	a.SetEntity(entity)
+	return a
 }
 
 type Argus struct {
-	Monitor Monitor
+	entity  argusModel.Argus
+	monitor Monitor
 }
 
-type Monitor interface {
-	Sleep()
-	Interval() time.Duration
+func (a *Argus) Spawn(node Node) {
+	entity := a.Entity()
+	if !entity.Spawn(node.Entity.ID) {
+		return
+	}
+	for a.monitor.Alive() {
+		a.Monitor().Sleep()
+		a.Monitor().Check()
+	}
 }
 
-func Init(inject *gorm.DB) {
-	db = inject
-	Register(&Node{})
+func (a Argus) Owner() uint {
+	return a.entity.AccountId
+}
+
+func (a Argus) Monitor() Monitor {
+	return a.monitor
+}
+
+func (a Argus) Entity() argusModel.Argus {
+	return a.entity
+}
+
+func (a *Argus) SetEntity(m argusModel.Argus) Argus {
+	a.entity = m
+	a.setMonitor(m.Monitor())
+	return *a
+}
+
+func (a Argus) Name() string {
+	return a.entity.Name
+}
+
+func (a Argus) ID() string {
+	return utils.UintToString(a.entity.ID)
+}
+
+func (a Argus) Description() string {
+	return a.entity.Description
+}
+
+func (a Argus) Type() constants.MonitorType {
+	return a.entity.Type
+}
+
+func (a *Argus) setMonitor(monitor argusModel.Monitor) {
+	var m Monitor
+	switch monitor.(type) {
+	case *argusModel.HttpMonitor:
+		m = &HttpMonitor{}
+	case *argusModel.PingMonitor:
+		m = &PingMonitor{}
+	}
+	m.SetEntity(monitor)
+	a.monitor = m
 }
 
 func Register(node *Node) {
@@ -78,33 +127,14 @@ func Register(node *Node) {
 	go func() {
 		for {
 			mu.Lock()
-			for _, argus := range orphanArgus() {
-				go Spawn(argus)
+			for _, argusEntity := range orphanArgus() {
+				a := NewArgus(argusEntity)
+				go a.Spawn(*node)
 			}
 			mu.Unlock()
 			time.Sleep(CHECK_MONITORS_INTERVAL * time.Second)
 		}
 	}()
-}
-
-func Spawn(argus argusModel.Argus) {
-	var monitor Monitor
-	switch argus.Monitor().GetType() {
-	case "HTTP":
-		m, ok := argus.Monitor().(*argusModel.HttpMonitor)
-		if ok {
-			monitor = HttpMonitor{
-				Monitor: *m,
-			}
-		}
-	}
-	a := Argus{
-		Monitor: monitor,
-	}
-	for {
-		fmt.Println(a, "sleep")
-		a.Monitor.Sleep()
-	}
 }
 
 func orphanArgus() []argusModel.Argus {
@@ -127,18 +157,20 @@ func diedArgusNodes() []argusModel.ArgusNode {
 
 func recoverNode(node argusModel.ArgusNode) {
 	db.Transaction(func(tx *gorm.DB) error {
-		node := argusModel.ArgusNode{}
-		if ctx := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Find(&node, node.ID); ctx.Error != nil {
-			tx.Rollback()
-			return ctx.Error
-		}
-		if ctx := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Model(&argusModel.Argus{}).Where(
+		ctx := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Model(&argusModel.Argus{}).Where(
 			"argus_node_id = ?",
-			node.ID).Update("argus_node_id", nil); ctx.Error != nil {
+			node.ID).Update("argus_node_id", nil)
+		if ctx.Error != nil {
 			tx.Rollback()
 			return ctx.Error
 		}
-		if ctx := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Delete(&argusModel.ArgusNode{}, node.ID); ctx.Error != nil {
+		ctx = tx.Clauses(clause.Locking{Strength: "UPDATE"}).Find(&node)
+		if ctx.Error != nil {
+			tx.Rollback()
+			return ctx.Error
+		}
+		ctx = tx.Clauses(clause.Locking{Strength: "UPDATE"}).Delete(&node)
+		if ctx.Error != nil {
 			tx.Rollback()
 			return ctx.Error
 		}

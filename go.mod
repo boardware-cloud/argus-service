@@ -3,8 +3,8 @@ module github.com/boardware-cloud/argus-service
 go 1.20
 
 require (
-	github.com/boardware-cloud/common v0.0.0-20231010074109-e48c7fc51b44
-	github.com/boardware-cloud/model v0.0.0-20231010084555-94273e2aa5db
+	github.com/boardware-cloud/common v0.0.0-20231011014717-edbec7094e77
+	github.com/boardware-cloud/model v0.0.0-20231011065709-9cded93e10e2
 	github.com/chenyunda218/golambda v0.0.0-20230809035428-25245dc9a8bd // indirect
 	github.com/gin-gonic/gin v1.9.1
 	github.com/spf13/viper v1.16.0
@@ -12,8 +12,8 @@ require (
 )
 
 require (
-	github.com/boardware-cloud/argus-api v0.0.0-20231010084851-b790716ae432
-	github.com/boardware-cloud/middleware v0.0.0-20231010081117-2a53e05dcd39
+	github.com/boardware-cloud/argus-api v0.0.0-20231011034135-cde4bed72a7e
+	github.com/boardware-cloud/middleware v0.0.0-20231011033046-b3126b9509a7
 )
 
 require (
