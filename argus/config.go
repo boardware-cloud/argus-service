@@ -5,6 +5,7 @@ import (
 
 	"github.com/boardware-cloud/common/constants"
 	argusModel "github.com/boardware-cloud/model/argus"
+	"github.com/boardware-cloud/model/common"
 )
 
 type ArgusConfig struct {
@@ -35,18 +36,28 @@ type HttpMonitorConfig struct {
 	Interval            int64                `json:"interval"`
 	Timeout             int64                `json:"timeout"`
 	Retries             int64                `json:"retries"`
-	Headers             Pair                 `json:"headers"`
+	Headers             []Pair               `json:"headers"`
 	AcceptedStatusCodes []string             `json:"acceptedStatusCodes"`
 	Method              constants.HttpMehotd `json:"method"`
 }
 
 func (config HttpMonitorConfig) ToEntity() argusModel.Monitor {
+	headers := common.PairList{}
+	for _, header := range config.Headers {
+		headers = append(headers, common.Pair{Left: header.Left, Right: header.Right})
+	}
+	acceptedStatusCodes := common.StringList{}
+	for _, code := range config.AcceptedStatusCodes {
+		acceptedStatusCodes = append(acceptedStatusCodes, code)
+	}
 	return &argusModel.HttpMonitor{
-		Type:       "HTTP",
-		Url:        config.Url,
-		Timeout:    config.Timeout,
-		Interval:   time.Duration(config.Interval) * time.Second,
-		HttpMethod: config.Method,
+		Type:                "HTTP",
+		Url:                 config.Url,
+		Timeout:             config.Timeout,
+		Interval:            time.Duration(config.Interval) * time.Second,
+		HttpMethod:          config.Method,
+		Headers:             headers,
+		AcceptedStatusCodes: acceptedStatusCodes,
 	}
 }
 

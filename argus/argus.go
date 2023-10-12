@@ -39,12 +39,15 @@ type Argus struct {
 }
 
 func (a *Argus) Alive() bool {
+	entity, err := argusModel.FindArgus(a.Entity().ID)
+	if err != nil || entity.Status != "ACTIVED" || entity.UpdatedAt != a.Entity().UpdatedAt {
+		return false
+	}
 	return true
 }
 
 func (a *Argus) Spawn(node Node) {
-	entity := a.Entity()
-	if !entity.Spawn(node.Entity.ID) {
+	if !a.entity.Spawn(node.Entity.ID) {
 		return
 	}
 	for a.Alive() {
@@ -116,7 +119,8 @@ type Result interface {
 	ResponseTime() time.Duration
 }
 
-func Register(node *Node) {
+func Register() {
+	node = new(Node)
 	var mu sync.Mutex
 	entity := argusModel.ArgusNode{
 		Heartbeat:         time.Now().Unix(),
@@ -149,8 +153,7 @@ func Register(node *Node) {
 		for {
 			mu.Lock()
 			for _, argusEntity := range orphanArgus() {
-				a := NewArgus(argusEntity)
-				go a.Spawn(*node)
+				Spawn(NewArgus(argusEntity))
 			}
 			mu.Unlock()
 			time.Sleep(CHECK_MONITORS_INTERVAL * time.Second)

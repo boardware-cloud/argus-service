@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"time"
 
 	api "github.com/boardware-cloud/argus-api"
@@ -11,6 +10,7 @@ import (
 	"github.com/boardware-cloud/common/constants"
 	argusModel "github.com/boardware-cloud/model/argus"
 	"github.com/boardware-cloud/model/common"
+	"github.com/chenyunda218/golambda"
 )
 
 func Convert(from any) any {
@@ -38,7 +38,6 @@ func PaginationBackward(p common.Pagination) api.Pagination {
 }
 
 func MonitorBackward(a argus.Argus) api.Monitor {
-	fmt.Println(a.ID())
 	apiModel := api.Monitor{
 		Id:          a.ID(),
 		Name:        a.Name(),
@@ -98,5 +97,12 @@ func HttpMonitorConfigConvert(raw api.HttpMonitor) argus.HttpMonitorConfig {
 		Timeout:  config.Convention(raw.Timeout, 10),
 		Retries:  config.Convention(raw.Retries, 3),
 		Method:   constants.HttpMehotd(config.Convention(raw.Method, api.GET)),
+		Headers: golambda.Map(config.Convention(raw.Headers, []api.Pair{}), func(_ int, header api.Pair) argus.Pair {
+			return argus.Pair{
+				Left:  header.Left,
+				Right: header.Right,
+			}
+		}),
+		AcceptedStatusCodes: config.Convention(raw.AcceptedStatusCodes, []string{}),
 	}
 }

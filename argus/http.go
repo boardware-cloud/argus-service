@@ -2,6 +2,8 @@ package argus
 
 import (
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/boardware-cloud/common/code"
@@ -39,31 +41,70 @@ func (h *HttpMonitor) Check() Result {
 	// if m.Body != nil {
 	// 	req, _ = http.NewRequest(string(*m.HttpMethod), m.Url, bytes.NewReader([]byte(*m.Body)))
 	// }
-	// if m.Headers != nil {
-	// 	for _, header := range *m.Headers {
-	// 		req.Header.Add(header.Left, header.Right)
-	// 	}
-	// }
-	start := time.Now().UnixMilli()
-	resp, err := client.Do(req)
+	for _, header := range h.entity.Headers {
+		req.Header.Add(header.Left, header.Right)
+	}
+	tries := int64(0)
 	result := new(HttpCheckResult)
-	result.responseTime = time.Duration(time.Now().UnixMilli() - start)
-	if err != nil {
-		if resp == nil {
-			result.status = TIMEOUT
+	for tries <= h.entity.Retries {
+		tries++
+		start := time.Now().UnixMilli()
+		resp, err := client.Do(req)
+		result.responseTime = time.Duration(time.Now().UnixMilli() - start)
+		if err != nil {
+			if resp == nil {
+				result.status = TIMEOUT
+			} else {
+				result.status = DOWN
+			}
 		} else {
-			result.status = DOWN
+			if checkAccepted(h.entity.AcceptedStatusCodes, resp.StatusCode) {
+				result.status = OK
+			} else {
+				result.status = DOWN
+			}
 		}
-	} else {
-		result.status = OK
-		// record.StatusCode = fmt.Sprint(resp.StatusCode)
-		// if checkAccepted(m.AcceptedStatusCodes, resp.StatusCode) {
-		// 	result.status = constants.OK
-		// } else {
-		// 	record.Result = constants.DOWN
-		// }
 	}
 	return result
+}
+
+func checkAccepted(acceptedStatusCodes []string, statusCode int) bool {
+	if len(acceptedStatusCodes) != 0 {
+		for _, code := range acceptedStatusCodes {
+			if checkAcceptedStatusCode(code, statusCode) {
+				return true
+			}
+		}
+		return false
+	}
+	if statusCode >= 200 && statusCode < 300 {
+		return true
+	}
+	return false
+}
+
+func checkAcceptedStatusCode(acceptedStatusCode string, statusCode int) bool {
+	codes := strings.Split(acceptedStatusCode, "-")
+	if len(codes) == 1 {
+		return codes[0] == strconv.Itoa(statusCode)
+	}
+	left, err := strconv.Atoi(codes[0])
+	if err != nil {
+		return false
+	}
+	right, err := strconv.Atoi(codes[len(codes)-1])
+	if err != nil {
+		return false
+	}
+	if left > right {
+		temp := left
+		left = right
+		right = temp
+	}
+	if statusCode >= left && statusCode <= right {
+		return true
+	}
+	return false
 }
 
 type HttpCheckResult struct {

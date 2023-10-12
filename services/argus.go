@@ -13,6 +13,7 @@ func CreateMonitor(account core.Account, config argus.ArgusConfig) argus.Argus {
 	db.Save(&entity)
 	a := new(argus.Argus)
 	a.SetEntity(entity)
+	argus.Spawn(*a)
 	return *a
 }
 
@@ -24,6 +25,7 @@ func UpdateMonitor(id uint, config argus.ArgusConfig) (argus.Argus, error) {
 	entity.Update(config.ToEntity())
 	a := new(argus.Argus)
 	a.SetEntity(entity)
+	argus.Spawn(*a)
 	return *a, nil
 }
 
