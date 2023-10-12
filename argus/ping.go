@@ -1,7 +1,6 @@
 package argus
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/boardware-cloud/common/code"
@@ -12,12 +11,8 @@ type PingMonitor struct {
 	entity argusModel.PingMonitor
 }
 
-func (p PingMonitor) Interval() time.Duration {
-	return time.Duration(p.entity.Interval) * time.Second
-}
-
-func (p PingMonitor) Sleep() {
-	// time.Sleep(p.Interval() * time.Second)
+func (p PingMonitor) Sleep(a Argus) {
+	// TODO
 	time.Sleep(5 * time.Second)
 }
 
@@ -34,10 +29,23 @@ func (p PingMonitor) Entity() argusModel.Monitor {
 	return &p.entity
 }
 
-func (h *PingMonitor) Check() {
-	fmt.Println("ping check")
+func (h *PingMonitor) Check() Result {
+	// TODO
+	return &PingCheckResult{}
 }
 
-func (h *PingMonitor) Alive() bool {
-	return false
+type PingCheckResult struct {
+	status ResultStatus
+}
+
+func (r PingCheckResult) Status() ResultStatus {
+	return r.status
+}
+
+func (r PingCheckResult) ResponseTime() time.Duration {
+	return 0
+}
+
+func (r *PingCheckResult) SetResponseTime() *PingCheckResult {
+	return r
 }

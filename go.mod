@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/boardware-cloud/common v0.0.0-20231011014717-edbec7094e77
-	github.com/boardware-cloud/model v0.0.0-20231011065709-9cded93e10e2
+	github.com/boardware-cloud/model v0.0.0-20231012043021-d3e73c3de007
 	github.com/chenyunda218/golambda v0.0.0-20230809035428-25245dc9a8bd // indirect
 	github.com/gin-gonic/gin v1.9.1
 	github.com/spf13/viper v1.16.0

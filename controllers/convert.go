@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	api "github.com/boardware-cloud/argus-api"
 	"github.com/boardware-cloud/argus-service/argus"
@@ -50,6 +51,8 @@ func MonitorBackward(a argus.Argus) api.Monitor {
 		j, _ := json.Marshal(m)
 		apiHttp := api.HttpMonitor{}
 		json.Unmarshal(j, &apiHttp)
+		interval := *apiHttp.Interval / int64(time.Second)
+		apiHttp.Interval = &interval
 		apiModel.HttpMonitor = &apiHttp
 	case *argus.PingMonitor:
 		m := argusMonitor.Entity().(*argusModel.PingMonitor)

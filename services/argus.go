@@ -8,17 +8,23 @@ import (
 )
 
 func CreateMonitor(account core.Account, config argus.ArgusConfig) argus.Argus {
-	entity := config.ToEntity(account)
+	entity := config.ToEntity()
 	entity.AccountId = account.ID
 	db.Save(&entity)
-	a := argus.Argus{}
+	a := new(argus.Argus)
 	a.SetEntity(entity)
-	return a
+	return *a
 }
 
-func UpdateMonitor(monitorId any, config argus.ArgusConfig) {
-	// a := config.ToEntity(account)
-	// db.Save(&a)
+func UpdateMonitor(id uint, config argus.ArgusConfig) (argus.Argus, error) {
+	entity, err := argusModel.FindArgus(id)
+	if err != nil {
+		return argus.Argus{}, nil
+	}
+	entity.Update(config.ToEntity())
+	a := new(argus.Argus)
+	a.SetEntity(entity)
+	return *a, nil
 }
 
 func GetMonitor(id uint) argus.Argus {

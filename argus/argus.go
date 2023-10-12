@@ -38,14 +38,22 @@ type Argus struct {
 	monitor Monitor
 }
 
+func (a *Argus) Alive() bool {
+	return true
+}
+
 func (a *Argus) Spawn(node Node) {
 	entity := a.Entity()
 	if !entity.Spawn(node.Entity.ID) {
 		return
 	}
-	for a.monitor.Alive() {
-		a.Monitor().Sleep()
-		a.Monitor().Check()
+	for a.Alive() {
+		a.Monitor().Sleep(*a)
+		if !a.Alive() {
+			return
+		}
+		result := a.Monitor().Check()
+		a.Entity().Record(string(result.Status()), result.ResponseTime())
 	}
 }
 
@@ -93,6 +101,19 @@ func (a *Argus) setMonitor(monitor argusModel.Monitor) {
 	}
 	m.SetEntity(monitor)
 	a.monitor = m
+}
+
+type ResultStatus string
+
+const (
+	OK      ResultStatus = "OK"
+	DOWN    ResultStatus = "DOWN"
+	TIMEOUT ResultStatus = "TIMEOUT"
+)
+
+type Result interface {
+	Status() ResultStatus
+	ResponseTime() time.Duration
 }
 
 func Register(node *Node) {

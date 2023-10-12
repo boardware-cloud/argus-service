@@ -6,5 +6,5 @@ var db *gorm.DB
 
 func Init(inject *gorm.DB) {
 	db = inject
-	Register(&Node{})
+	Register(new(Node))
 }

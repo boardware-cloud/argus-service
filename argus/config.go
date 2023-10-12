@@ -1,9 +1,10 @@
 package argus
 
 import (
+	"time"
+
 	"github.com/boardware-cloud/common/constants"
 	argusModel "github.com/boardware-cloud/model/argus"
-	"github.com/boardware-cloud/model/core"
 )
 
 type ArgusConfig struct {
@@ -14,7 +15,7 @@ type ArgusConfig struct {
 	MonitorConfig MonitorConfig `json:"config"`
 }
 
-func (a ArgusConfig) ToEntity(account core.Account) argusModel.Argus {
+func (a ArgusConfig) ToEntity() argusModel.Argus {
 	argus := argusModel.Argus{
 		Type:        constants.MonitorType(a.Type),
 		Name:        a.Name,
@@ -44,7 +45,7 @@ func (config HttpMonitorConfig) ToEntity() argusModel.Monitor {
 		Type:       "HTTP",
 		Url:        config.Url,
 		Timeout:    config.Timeout,
-		Interval:   config.Interval,
+		Interval:   time.Duration(config.Interval) * time.Second,
 		HttpMethod: config.Method,
 	}
 }
@@ -61,7 +62,7 @@ func (config PingMonitorConfig) ToEntity() argusModel.Monitor {
 		Type:     "PING",
 		Url:      config.Url,
 		Timeout:  config.Timeout,
-		Interval: config.Interval,
+		Interval: time.Duration(config.Interval) * time.Second,
 	}
 }
 

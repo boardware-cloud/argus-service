@@ -17,18 +17,15 @@ const DEFAULT_INTERVAL = 5 * 60
 
 type MonitorApi struct{}
 
-func (MonitorApi) UpdateMonitor(c *gin.Context, monitorId string, putMonitorRequest api.PutMonitorRequest) {
+func (MonitorApi) UpdateMonitor(c *gin.Context, monitorId string, request api.PutMonitorRequest) {
 	middleware.GetAccount(c,
 		func(c *gin.Context, account model.Account) {
-			// services.UpdateMonitor(
-			// 	account.ID,
-			// 	utils.StringToUint(monitorId),
-			// 	PutMonitorForward(putMonitorRequest),
-			// ).Just(func(data services.Monitor) {
-			// 	c.JSON(http.StatusOK, MonitorBackward(data))
-			// }).Nothing(func() {
-			// 	c.JSON(http.StatusNotFound, "")
-			// })
+			a, err := services.UpdateMonitor(utils.StringToUint(monitorId), MonitorConfigConvert(request))
+			if err != nil {
+				code.GinHandler(c, err)
+				return
+			}
+			c.JSON(http.StatusOK, MonitorBackward(a))
 		})
 }
 
@@ -75,8 +72,7 @@ func (MonitorApi) DeleteMonitor(c *gin.Context, id string) {
 				return
 			}
 			services.DeleteMonitor(monitor)
-			// services.DeleteMonitor(account.ID, utils.StringToUint(id))
-			// c.AbortWithStatus(http.StatusNoContent)
+			c.JSON(http.StatusNoContent, "")
 		})
 }
 
