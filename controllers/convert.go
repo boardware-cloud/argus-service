@@ -25,8 +25,18 @@ func Convert(from any) any {
 		return MonitorBackward(f)
 	case common.Pagination:
 		return PaginationBackward(f)
+	case argus.Record:
+		return RecordBackward(f)
 	}
 	return nil
+}
+
+func RecordBackward(a argus.Record) api.MonitoringRecord {
+	return api.MonitoringRecord{
+		ResponseTime: int64(a.ResponesTime) / int64(time.Second),
+		Result:       api.MonitoringResult(a.Result),
+		CheckedAt:    a.CheckedAt.Unix(),
+	}
 }
 
 func PaginationBackward(p common.Pagination) api.Pagination {

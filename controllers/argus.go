@@ -54,7 +54,11 @@ func (MonitorApi) ListMonitors(c *gin.Context, ordering api.Ordering, index int6
 func (MonitorApi) GetMonitor(c *gin.Context, id string) {
 	middleware.GetAccount(c,
 		func(c *gin.Context, account model.Account) {
-			a := services.GetMonitor(utils.StringToUint(id))
+			a, err := services.GetMonitor(utils.StringToUint(id))
+			if err != nil {
+				code.GinHandler(c, err)
+				return
+			}
 			if !account.Own(a) {
 				code.GinHandler(c, code.ErrPermissionDenied)
 				return
@@ -66,7 +70,11 @@ func (MonitorApi) GetMonitor(c *gin.Context, id string) {
 func (MonitorApi) DeleteMonitor(c *gin.Context, id string) {
 	middleware.GetAccount(c,
 		func(c *gin.Context, account model.Account) {
-			monitor := services.GetMonitor((utils.StringToUint(id)))
+			monitor, err := services.GetMonitor((utils.StringToUint(id)))
+			if err != nil {
+				code.GinHandler(c, err)
+				return
+			}
 			if !account.Own(monitor) {
 				code.GinHandler(c, code.ErrPermissionDenied)
 				return
@@ -79,18 +87,23 @@ func (MonitorApi) DeleteMonitor(c *gin.Context, id string) {
 func (MonitorApi) ListMonitoringRecords(c *gin.Context, id string, index, limit, startAt, endAt int64) {
 	middleware.GetAccount(c,
 		func(c *gin.Context, account model.Account) {
-			// services.GetMonitor(
-			// 	account.ID,
-			// 	utils.StringToUint(id),
-			// ).Just(
-			// 	func(data services.Monitor) {
-			// 		c.JSON(
-			// 			http.StatusOK,
-			// 			MonitoringRecordListBackward(services.ListMonitoringRecords(data.Id, index, limit, startAt, endAt)),
-			// 		)
-			// 	}).Nothing(
-			// 	func() {
-			// 		c.AbortWithStatus(http.StatusNotFound)
-			// 	})
+			monitor, err := services.GetMonitor((utils.StringToUint(id)))
+			if err != nil {
+				code.GinHandler(c, err)
+				return
+			}
+			if !account.Own(monitor) {
+				code.GinHandler(c, code.ErrPermissionDenied)
+				return
+			}
+			list, pagination := services.ListRecords(monitor.Entity().ID, index, limit)
+			var recordList []api.MonitoringRecord
+			for _, item := range list {
+				recordList = append(recordList, Convert(item).(api.MonitoringRecord))
+			}
+			c.JSON(http.StatusOK, api.MonitoringRecordList{
+				Data:       recordList,
+				Pagination: Convert(pagination).(api.Pagination),
+			})
 		})
 }

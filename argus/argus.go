@@ -119,6 +119,12 @@ type Result interface {
 	ResponseTime() time.Duration
 }
 
+type Record struct {
+	Result       ResultStatus
+	ResponesTime time.Duration
+	CheckedAt    time.Time
+}
+
 func Register() {
 	node = new(Node)
 	var mu sync.Mutex

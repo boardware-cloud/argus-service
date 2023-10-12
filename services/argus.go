@@ -29,17 +29,19 @@ func UpdateMonitor(id uint, config argus.ArgusConfig) (argus.Argus, error) {
 	return *a, nil
 }
 
-func GetMonitor(id uint) argus.Argus {
-	var model argusModel.Argus
-	db.Find(&model, id)
+func GetMonitor(id uint) (argus.Argus, error) {
+	model, err := argusModel.FindArgus(id)
 	a := argus.Argus{}
+	if err != nil {
+		return a, err
+	}
 	a.SetEntity(model)
-	return a
+	return a, nil
 }
 
 func ListMonitors(accountId uint, index, limit int64) ([]argus.Argus, common.Pagination) {
 	var list []argusModel.Argus
-	pagination := common.ListEntity(&list, index, limit, db.Where("account_id = ?", accountId))
+	pagination := common.ListEntity(&list, index, limit, "", db.Where("account_id = ?", accountId))
 	var argusList []argus.Argus
 	for _, item := range list {
 		argusList = append(argusList, argus.NewArgus(item))
@@ -50,4 +52,18 @@ func ListMonitors(accountId uint, index, limit int64) ([]argus.Argus, common.Pag
 func DeleteMonitor(a argus.Argus) {
 	entity := a.Entity()
 	db.Delete(&entity)
+}
+
+func ListRecords(argusId uint, index, limit int64) ([]argus.Record, common.Pagination) {
+	var list []argusModel.ArgusRecord
+	pagination := common.ListEntity(&list, index, limit, "created_at DESC", db.Where("argus_id = ?", argusId))
+	var records []argus.Record
+	for _, i := range list {
+		records = append(records, argus.Record{
+			Result:       argus.ResultStatus(i.Result),
+			ResponesTime: i.ResponesTime,
+			CheckedAt:    i.CreatedAt,
+		})
+	}
+	return records, pagination
 }
