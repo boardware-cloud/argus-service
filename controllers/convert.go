@@ -10,6 +10,7 @@ import (
 	"github.com/boardware-cloud/common/constants"
 	argusModel "github.com/boardware-cloud/model/argus"
 	"github.com/boardware-cloud/model/common"
+	"github.com/boardware-cloud/model/notification"
 	"github.com/chenyunda218/golambda"
 )
 
@@ -48,11 +49,13 @@ func PaginationBackward(p common.Pagination) api.Pagination {
 }
 
 func MonitorBackward(a argus.Argus) api.Monitor {
+	notificationGroup := NotificationGroupBackward(a.Entity().NotificationGroup)
 	apiModel := api.Monitor{
-		Id:          a.ID(),
-		Name:        a.Name(),
-		Description: a.Description(),
-		Type:        api.MonitorType(a.Type()),
+		Id:                a.ID(),
+		Name:              a.Name(),
+		Description:       a.Description(),
+		Type:              api.MonitorType(a.Type()),
+		NotificationGroup: &notificationGroup,
 	}
 	switch argusMonitor := a.Monitor().(type) {
 	case *argus.HttpMonitor:
@@ -76,18 +79,19 @@ func MonitorBackward(a argus.Argus) api.Monitor {
 func MonitorConfigConvert(raw api.PutMonitorRequest) argus.ArgusConfig {
 	var monitorConfig argus.MonitorConfig
 	t := config.Convention(raw.Type, api.HTTP)
-	switch t {
+	switch config.Convention(raw.Type, api.HTTP) {
 	case api.HTTP:
 		monitorConfig = HttpMonitorConfigConvert(config.Convention(raw.HttpMonitor, api.HttpMonitor{}))
 	case api.PING:
 		monitorConfig = PingMonitorConfigConvert(config.Convention(raw.PingMonitor, api.PingMonitor{}))
 	}
 	return argus.ArgusConfig{
-		Name:          config.Convention(raw.Name, ""),
-		Description:   config.Convention(raw.Description, ""),
-		Status:        string(config.Convention(raw.Status, api.DISACTIVED)),
-		Type:          string(t),
-		MonitorConfig: monitorConfig,
+		Name:                    config.Convention(raw.Name, ""),
+		Description:             config.Convention(raw.Description, ""),
+		Status:                  string(config.Convention(raw.Status, api.DISACTIVED)),
+		Type:                    string(t),
+		MonitorConfig:           monitorConfig,
+		NotificationGroupConfig: NotificationGroupConvert(config.Convention(raw.NotificationGroup, api.NotificationGroup{})),
 	}
 }
 
@@ -114,5 +118,60 @@ func HttpMonitorConfigConvert(raw api.HttpMonitor) argus.HttpMonitorConfig {
 			}
 		}),
 		AcceptedStatusCodes: config.Convention(raw.AcceptedStatusCodes, []string{}),
+	}
+}
+
+func NotificationGroupBackward(raw notification.NotificationGroup) api.NotificationGroup {
+	interval := int64(raw.Interval / time.Second)
+	var notifications []api.Notification
+	for _, n := range raw.Notifications() {
+		temp := api.Notification{
+			Interval: &interval,
+			Type:     api.NotificationType(n.Type),
+		}
+		switch n.Type {
+		case "EMAIL":
+			entity := n.Entity().(notification.Email)
+			temp.Email = &api.EmailNotification{
+				Receivers: &api.EmailReceivers{
+					To:  entity.To,
+					Cc:  entity.Cc,
+					Bcc: entity.Bcc,
+				},
+			}
+		}
+		notifications = append(notifications, temp)
+	}
+	o := api.NotificationGroup{
+		Interval:      &interval,
+		Notifications: &notifications,
+	}
+	return o
+}
+
+func NotificationGroupConvert(raw api.NotificationGroup) argus.NotificationGroupConfig {
+	interval := time.Second * time.Duration(config.Convention(raw.Interval, int64(600)))
+	notifications := config.Convention(raw.Notifications, []api.Notification{})
+	var notificationConfigs []argus.NotificationConfig = make([]argus.NotificationConfig, 0)
+	for _, notification := range notifications {
+		notificationConfigs = append(notificationConfigs, NotificationConvert(notification))
+	}
+	return argus.NotificationGroupConfig{
+		Interval:      interval,
+		Notifications: notificationConfigs,
+	}
+}
+
+func NotificationConvert(raw api.Notification) argus.NotificationConfig {
+	return EmailNotificationConvert(config.Convention(raw.Email, api.EmailNotification{}))
+}
+
+func EmailNotificationConvert(raw api.EmailNotification) argus.EmailNotificationConfig {
+	return argus.EmailNotificationConfig{
+		Receivers: argus.EmailReceivers{
+			To:  raw.Receivers.To,
+			Cc:  raw.Receivers.Cc,
+			Bcc: raw.Receivers.Bcc,
+		},
 	}
 }

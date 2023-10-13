@@ -6,22 +6,25 @@ import (
 	"github.com/boardware-cloud/common/constants"
 	argusModel "github.com/boardware-cloud/model/argus"
 	"github.com/boardware-cloud/model/common"
+	"github.com/boardware-cloud/model/notification"
 )
 
 type ArgusConfig struct {
-	Name          string        `json:"name"`
-	Description   string        `json:"description"`
-	Type          string        `json:"type"`
-	Status        string        `json:"status"`
-	MonitorConfig MonitorConfig `json:"config"`
+	Name                    string        `json:"name"`
+	Description             string        `json:"description"`
+	Type                    string        `json:"type"`
+	Status                  string        `json:"status"`
+	MonitorConfig           MonitorConfig `json:"config"`
+	NotificationGroupConfig NotificationGroupConfig
 }
 
 func (a ArgusConfig) ToEntity() argusModel.Argus {
 	argus := argusModel.Argus{
-		Type:        constants.MonitorType(a.Type),
-		Name:        a.Name,
-		Description: a.Description,
-		Status:      constants.MonitorStatus(a.Status),
+		Type:              constants.MonitorType(a.Type),
+		Name:              a.Name,
+		Description:       a.Description,
+		Status:            constants.MonitorStatus(a.Status),
+		NotificationGroup: a.NotificationGroupConfig.ToEntity(),
 	}
 	argus.SetMonitor(a.MonitorConfig.ToEntity())
 	return argus
@@ -59,6 +62,51 @@ func (config HttpMonitorConfig) ToEntity() argusModel.Monitor {
 		Headers:             headers,
 		AcceptedStatusCodes: acceptedStatusCodes,
 	}
+}
+
+type NotificationGroupConfig struct {
+	Interval      time.Duration `json:"interval"`
+	Notifications []NotificationConfig
+}
+
+func (config NotificationGroupConfig) ToEntity() notification.NotificationGroup {
+	n := notification.NotificationGroup{
+		Interval: config.Interval,
+	}
+	var notificationList []notification.Notification
+	for _, c := range config.Notifications {
+		notificationList = append(notificationList, c.ToEntity())
+	}
+	n.SetNotifications(notificationList)
+	return n
+}
+
+type NotificationConfig interface {
+	ToEntity() notification.Notification
+}
+
+type EmailNotificationConfig struct {
+	Interval  *time.Duration `json:"interval"`
+	Receivers EmailReceivers `json:"receivers"`
+}
+
+func (e EmailNotificationConfig) ToEntity() notification.Notification {
+	n := notification.Notification{
+		Type:     "EMAIL",
+		Interval: e.Interval,
+	}
+	n.SetEntity(notification.Email{
+		To:  e.Receivers.To,
+		Cc:  e.Receivers.Cc,
+		Bcc: e.Receivers.Bcc,
+	})
+	return n
+}
+
+type EmailReceivers struct {
+	To  []string
+	Cc  []string
+	Bcc []string
 }
 
 type PingMonitorConfig struct {

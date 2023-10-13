@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/boardware-cloud/common v0.0.0-20231011014717-edbec7094e77
-	github.com/boardware-cloud/model v0.0.0-20231012091835-85d1ef332f14
+	github.com/boardware-cloud/model v0.0.0-20231013071009-3cdd06f9e4cc
 	github.com/chenyunda218/golambda v0.0.0-20230809035428-25245dc9a8bd // indirect
 	github.com/gin-gonic/gin v1.9.1
 	github.com/spf13/viper v1.16.0
@@ -12,7 +12,7 @@ require (
 )
 
 require (
-	github.com/boardware-cloud/argus-api v0.0.0-20231013011421-87cf64551211
+	github.com/boardware-cloud/argus-api v0.0.0-20231013034643-13589b6891e5
 	github.com/boardware-cloud/middleware v0.0.0-20231011033046-b3126b9509a7
 )
 

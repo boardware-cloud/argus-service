@@ -54,6 +54,8 @@ github.com/boardware-cloud/argus-api v0.0.0-20231012091013-153150471ce5 h1:RbFvl
 github.com/boardware-cloud/argus-api v0.0.0-20231012091013-153150471ce5/go.mod h1:NHwhl/ZxM5xtnAXtZm5U2ECf7+27FOcNggIHAlfoTXc=
 github.com/boardware-cloud/argus-api v0.0.0-20231013011421-87cf64551211 h1:WuviqEJqxstk4tiabFbtYam7K4EAOfO4qZNRBC/zI+A=
 github.com/boardware-cloud/argus-api v0.0.0-20231013011421-87cf64551211/go.mod h1:NHwhl/ZxM5xtnAXtZm5U2ECf7+27FOcNggIHAlfoTXc=
+github.com/boardware-cloud/argus-api v0.0.0-20231013034643-13589b6891e5 h1:SQrXln5RVlnWWgOR6T1a38opybcK0X/2kO5sm07tizk=
+github.com/boardware-cloud/argus-api v0.0.0-20231013034643-13589b6891e5/go.mod h1:NHwhl/ZxM5xtnAXtZm5U2ECf7+27FOcNggIHAlfoTXc=
 github.com/boardware-cloud/common v0.0.0-20231010024258-966bd4eb9905 h1:d0z9E1m1FYpJz6037YsiWq1leyNYOraeT1L8SRltFKM=
 github.com/boardware-cloud/common v0.0.0-20231010024258-966bd4eb9905/go.mod h1:Ztn+PIPt9IhKncTFySl6LOyMhCV+AseebVcV5dDE18Y=
 github.com/boardware-cloud/common v0.0.0-20231010063056-1d15df636aa2 h1:acfqkv20XGh6/vaJ6uywzTXnEJMNHRxou9nPXZEXcxg=
@@ -120,6 +122,16 @@ github.com/boardware-cloud/model v0.0.0-20231012065254-7de9243dc656 h1:AgLVYKN5Z
 github.com/boardware-cloud/model v0.0.0-20231012065254-7de9243dc656/go.mod h1:hcO+MGHY12t9JjK24DqqPERwqA2xE1s+sHTcrU75WXA=
 github.com/boardware-cloud/model v0.0.0-20231012091835-85d1ef332f14 h1:C57cZE2Se/8bObFIR+4zxT8mAc2NOj8xS1eyJ9EFXAI=
 github.com/boardware-cloud/model v0.0.0-20231012091835-85d1ef332f14/go.mod h1:hcO+MGHY12t9JjK24DqqPERwqA2xE1s+sHTcrU75WXA=
+github.com/boardware-cloud/model v0.0.0-20231013034312-06a1bbd3b8a6 h1:+vPiPr81UqBRq+P07tvTLE1Z31IWdN7MGxcBX2Mb/As=
+github.com/boardware-cloud/model v0.0.0-20231013034312-06a1bbd3b8a6/go.mod h1:hcO+MGHY12t9JjK24DqqPERwqA2xE1s+sHTcrU75WXA=
+github.com/boardware-cloud/model v0.0.0-20231013041056-c91ccaf45073 h1:Hf51iLATkZON5IdvJuMyudhT8/MgwAa1JwbPsF7W2+g=
+github.com/boardware-cloud/model v0.0.0-20231013041056-c91ccaf45073/go.mod h1:hcO+MGHY12t9JjK24DqqPERwqA2xE1s+sHTcrU75WXA=
+github.com/boardware-cloud/model v0.0.0-20231013041731-af4e7078ad15 h1:TvgVcf4mLPBhAAB2iH9O5nZBxy7OkGGZltzlQHyxIN0=
+github.com/boardware-cloud/model v0.0.0-20231013041731-af4e7078ad15/go.mod h1:hcO+MGHY12t9JjK24DqqPERwqA2xE1s+sHTcrU75WXA=
+github.com/boardware-cloud/model v0.0.0-20231013042228-e9be5e7861b2 h1:gWXxpavi2eqNTehUWbbXEYnKfNOsg/qrLZ5OB2Rri/4=
+github.com/boardware-cloud/model v0.0.0-20231013042228-e9be5e7861b2/go.mod h1:hcO+MGHY12t9JjK24DqqPERwqA2xE1s+sHTcrU75WXA=
+github.com/boardware-cloud/model v0.0.0-20231013071009-3cdd06f9e4cc h1:+wj9FE+0iBU7W82BufnCeEMQR24PqjSPO8sZfEUS2BA=
+github.com/boardware-cloud/model v0.0.0-20231013071009-3cdd06f9e4cc/go.mod h1:hcO+MGHY12t9JjK24DqqPERwqA2xE1s+sHTcrU75WXA=
 github.com/bwmarrin/snowflake v0.3.0 h1:xm67bEhkKh6ij1790JB83OujPR5CzNe8QuQqAgISZN0=
 github.com/bwmarrin/snowflake v0.3.0/go.mod h1:NdZxfVWX+oR6y2K0o6qAYv6gIOP9rjG0/E9WsDpxqwE=
 github.com/bytedance/sonic v1.5.0/go.mod h1:ED5hyg4y6t3/9Ku1R6dU/4KyJ48DZ4jPhfY1O2AihPM=
