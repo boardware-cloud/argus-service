@@ -150,15 +150,16 @@ func NotificationGroupBackward(raw notification.NotificationGroup) api.Notificat
 }
 
 func NotificationGroupConvert(raw api.NotificationGroup) argus.NotificationGroupConfig {
-	interval := time.Second * time.Duration(config.Convention(raw.Interval, int64(600)))
-	notifications := config.Convention(raw.Notifications, []api.Notification{})
-	var notificationConfigs []argus.NotificationConfig = make([]argus.NotificationConfig, 0)
-	for _, notification := range notifications {
-		notificationConfigs = append(notificationConfigs, NotificationConvert(notification))
-	}
 	return argus.NotificationGroupConfig{
-		Interval:      interval,
-		Notifications: notificationConfigs,
+		Interval: time.Second * time.Duration(config.Convention(raw.Interval, int64(600))),
+		Notifications: golambda.Map(
+			config.Convention(
+				raw.Notifications,
+				[]api.Notification{},
+			),
+			func(_ int, a api.Notification) argus.NotificationConfig {
+				return NotificationConvert(a)
+			}),
 	}
 }
 

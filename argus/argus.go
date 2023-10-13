@@ -7,6 +7,7 @@ import (
 	"github.com/boardware-cloud/common/constants"
 	"github.com/boardware-cloud/common/utils"
 	argusModel "github.com/boardware-cloud/model/argus"
+	"github.com/chenyunda218/golambda"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -46,6 +47,10 @@ func (a *Argus) Alive() bool {
 	return true
 }
 
+func (a Argus) Notify() {
+
+}
+
 func (a *Argus) Spawn(node Node) {
 	if !a.entity.Spawn(node.Entity.ID) {
 		return
@@ -57,6 +62,9 @@ func (a *Argus) Spawn(node Node) {
 		}
 		result := a.Monitor().Check()
 		a.Entity().Record(string(result.Status()), result.ResponseTime())
+		if result.Status() != OK {
+			a.Notify()
+		}
 	}
 }
 
@@ -176,13 +184,9 @@ func orphanArgus() []argusModel.Argus {
 func diedArgusNodes() []argusModel.ArgusNode {
 	var nodes []argusModel.ArgusNode
 	db.Find(&nodes)
-	var diedNode []argusModel.ArgusNode
-	for _, node := range nodes {
-		if time.Now().Unix() > node.Heartbeat+node.HeartbeatInterval+HEARTBEAT_TOLERANCE {
-			diedNode = append(diedNode, node)
-		}
-	}
-	return diedNode
+	return golambda.Filter(nodes, func(index int, node argusModel.ArgusNode) bool {
+		return time.Now().Unix() > node.Heartbeat+node.HeartbeatInterval+HEARTBEAT_TOLERANCE
+	})
 }
 
 func recoverNode(node argusModel.ArgusNode) {
