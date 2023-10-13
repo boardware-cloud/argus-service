@@ -12,7 +12,7 @@ require (
 )
 
 require (
-	github.com/boardware-cloud/argus-api v0.0.0-20231012091013-153150471ce5
+	github.com/boardware-cloud/argus-api v0.0.0-20231013011421-87cf64551211
 	github.com/boardware-cloud/middleware v0.0.0-20231011033046-b3126b9509a7
 )
 
