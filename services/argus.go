@@ -16,21 +16,22 @@ func CreateMonitor(account core.Account, config argus.ArgusConfig) (argus.Argus,
 	entity := config.ToEntity()
 	entity.AccountId = account.ID()
 	a := new(argus.Argus)
-	a.SetEntity(entity)
+	db.Save(&entity)
 	argus.Spawn(*a)
+	a.SetEntity(entity)
 	return *a, nil
 }
 
 func UpdateMonitor(id uint, config argus.ArgusConfig) (argus.Argus, error) {
-	entity := argusRepository.GetById(id)
-	if entity == nil {
-		return argus.Argus{}, nil
+	a, err := GetMonitor(id)
+	if err != nil {
+		return a, err
 	}
+	entity := a.Entity()
 	entity.Update(config.ToEntity())
-	a := new(argus.Argus)
-	a.SetEntity(*entity)
-	argus.Spawn(*a)
-	return *a, nil
+	a.SetEntity(entity)
+	argus.Spawn(a)
+	return a, nil
 }
 
 func GetMonitor(id uint) (argus.Argus, error) {
