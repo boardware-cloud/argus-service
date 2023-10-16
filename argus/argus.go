@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/boardware-cloud/common/constants"
-	"github.com/boardware-cloud/common/utils"
+	"github.com/boardware-cloud/model/abstract"
 	argusModel "github.com/boardware-cloud/model/argus"
 	"github.com/chenyunda218/golambda"
 	"gorm.io/gorm"
@@ -39,9 +39,17 @@ type Argus struct {
 	monitor Monitor
 }
 
+func (a Argus) Owner() abstract.Owner {
+	return a.entity.Owner()
+}
+
+func (a *Argus) SetOwner(owner abstract.Owner) {
+
+}
+
 func (a *Argus) Alive() bool {
-	entity, err := argusModel.FindArgus(a.Entity().ID)
-	if err != nil || entity.Status != "ACTIVED" || entity.UpdatedAt != a.Entity().UpdatedAt {
+	entity := argusRepository.GetById(a.Entity().ID)
+	if entity == nil || entity.Status != "ACTIVED" || entity.UpdatedAt != a.Entity().UpdatedAt {
 		return false
 	}
 	return true
@@ -68,10 +76,6 @@ func (a *Argus) Spawn(node Node) {
 	}
 }
 
-func (a Argus) Owner() uint {
-	return a.entity.AccountId
-}
-
 func (a Argus) Monitor() Monitor {
 	return a.monitor
 }
@@ -90,8 +94,8 @@ func (a Argus) Name() string {
 	return a.entity.Name
 }
 
-func (a Argus) ID() string {
-	return utils.UintToString(a.entity.ID)
+func (a Argus) ID() uint {
+	return a.entity.ID
 }
 
 func (a Argus) Description() string {

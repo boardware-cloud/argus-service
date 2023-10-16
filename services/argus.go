@@ -2,6 +2,7 @@ package services
 
 import (
 	"github.com/boardware-cloud/argus-service/argus"
+	"github.com/boardware-cloud/common/code"
 	argusModel "github.com/boardware-cloud/model/argus"
 	"github.com/boardware-cloud/model/common"
 	"github.com/boardware-cloud/model/core"
@@ -9,7 +10,7 @@ import (
 
 func CreateMonitor(account core.Account, config argus.ArgusConfig) argus.Argus {
 	entity := config.ToEntity()
-	entity.AccountId = account.ID
+	entity.AccountId = account.ID()
 	db.Save(&entity)
 	a := new(argus.Argus)
 	a.SetEntity(entity)
@@ -18,24 +19,24 @@ func CreateMonitor(account core.Account, config argus.ArgusConfig) argus.Argus {
 }
 
 func UpdateMonitor(id uint, config argus.ArgusConfig) (argus.Argus, error) {
-	entity, err := argusModel.FindArgus(id)
-	if err != nil {
+	entity := argusRepository.GetById(id)
+	if entity == nil {
 		return argus.Argus{}, nil
 	}
 	entity.Update(config.ToEntity())
 	a := new(argus.Argus)
-	a.SetEntity(entity)
+	a.SetEntity(*entity)
 	argus.Spawn(*a)
 	return *a, nil
 }
 
 func GetMonitor(id uint) (argus.Argus, error) {
-	model, err := argusModel.FindArgus(id)
+	model := argusRepository.GetById(id)
 	a := argus.Argus{}
-	if err != nil {
-		return a, err
+	if model == nil {
+		return a, code.ErrNotFound
 	}
-	a.SetEntity(model)
+	a.SetEntity(*model)
 	return a, nil
 }
 

@@ -8,6 +8,7 @@ import (
 	"github.com/boardware-cloud/argus-service/argus"
 	"github.com/boardware-cloud/common/config"
 	"github.com/boardware-cloud/common/constants"
+	"github.com/boardware-cloud/common/utils"
 	argusModel "github.com/boardware-cloud/model/argus"
 	"github.com/boardware-cloud/model/common"
 	"github.com/boardware-cloud/model/notification"
@@ -51,7 +52,7 @@ func PaginationBackward(p common.Pagination) api.Pagination {
 func MonitorBackward(a argus.Argus) api.Monitor {
 	notificationGroup := NotificationGroupBackward(a.Entity().NotificationGroup)
 	apiModel := api.Monitor{
-		Id:                a.ID(),
+		Id:                utils.UintToString(a.ID()),
 		Name:              a.Name(),
 		Description:       a.Description(),
 		Type:              api.MonitorType(a.Type()),

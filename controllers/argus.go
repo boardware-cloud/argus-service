@@ -39,7 +39,7 @@ func (MonitorApi) CreateMonitor(ctx *gin.Context, request api.PutMonitorRequest)
 func (MonitorApi) ListMonitors(c *gin.Context, ordering api.Ordering, index int64, limit int64) {
 	middleware.GetAccount(c,
 		func(c *gin.Context, account model.Account) {
-			list, pagination := services.ListMonitors(account.ID, index, limit)
+			list, pagination := services.ListMonitors(account.ID(), index, limit)
 			var monitorList []api.Monitor
 			for _, item := range list {
 				monitorList = append(monitorList, Convert(item).(api.Monitor))
@@ -59,7 +59,7 @@ func (MonitorApi) GetMonitor(c *gin.Context, id string) {
 				code.GinHandler(c, err)
 				return
 			}
-			if !account.Own(a) {
+			if !account.Own(&a) {
 				code.GinHandler(c, code.ErrPermissionDenied)
 				return
 			}
@@ -75,7 +75,7 @@ func (MonitorApi) DeleteMonitor(c *gin.Context, id string) {
 				code.GinHandler(c, err)
 				return
 			}
-			if !account.Own(monitor) {
+			if !account.Own(&monitor) {
 				code.GinHandler(c, code.ErrPermissionDenied)
 				return
 			}
@@ -92,7 +92,7 @@ func (MonitorApi) ListMonitoringRecords(c *gin.Context, id string, index, limit,
 				code.GinHandler(c, err)
 				return
 			}
-			if !account.Own(monitor) {
+			if !account.Own(&monitor) {
 				code.GinHandler(c, code.ErrPermissionDenied)
 				return
 			}
