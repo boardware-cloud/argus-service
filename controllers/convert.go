@@ -35,7 +35,7 @@ func Convert(from any) any {
 
 func RecordBackward(a argus.Record) api.MonitoringRecord {
 	return api.MonitoringRecord{
-		ResponseTime: int64(a.ResponesTime) / int64(time.Second),
+		ResponseTime: int64(a.ResponesTime / time.Second),
 		Result:       api.MonitoringResult(a.Result),
 		CheckedAt:    a.CheckedAt.Unix(),
 	}
