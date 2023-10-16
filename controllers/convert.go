@@ -52,6 +52,7 @@ func PaginationBackward(p common.Pagination) api.Pagination {
 func MonitorBackward(a argus.Argus) api.Monitor {
 	notificationGroup := NotificationGroupBackward(a.Entity().NotificationGroup)
 	apiModel := api.Monitor{
+		Status:            api.MonitorStatus(a.Entity().Status),
 		Id:                utils.UintToString(a.ID()),
 		Name:              a.Name(),
 		Description:       a.Description(),
