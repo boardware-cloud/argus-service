@@ -46,6 +46,7 @@ func (h *HttpMonitor) Check() Result {
 	}
 	tries := int64(0)
 	result := new(HttpCheckResult)
+
 	for tries <= h.entity.Retries {
 		tries++
 		start := time.Now().UnixMilli()

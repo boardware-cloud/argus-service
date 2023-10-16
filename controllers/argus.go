@@ -31,7 +31,10 @@ func (MonitorApi) UpdateMonitor(c *gin.Context, monitorId string, request api.Pu
 
 func (MonitorApi) CreateMonitor(ctx *gin.Context, request api.PutMonitorRequest) {
 	middleware.GetAccount(ctx, func(c *gin.Context, account model.Account) {
-		a := services.CreateMonitor(account, MonitorConfigConvert(request))
+		a, err := services.CreateMonitor(account, MonitorConfigConvert(request))
+		if err != nil {
+			code.GinHandler(c, err)
+		}
 		ctx.JSON(http.StatusOK, MonitorBackward(a))
 	})
 }

@@ -1,6 +1,8 @@
 package services
 
 import (
+	"errors"
+
 	"github.com/boardware-cloud/argus-service/argus"
 	"github.com/boardware-cloud/common/code"
 	argusModel "github.com/boardware-cloud/model/argus"
@@ -8,14 +10,15 @@ import (
 	"github.com/boardware-cloud/model/core"
 )
 
-func CreateMonitor(account core.Account, config argus.ArgusConfig) argus.Argus {
+var ErrEmailDuplicate = errors.New("email duplicate")
+
+func CreateMonitor(account core.Account, config argus.ArgusConfig) (argus.Argus, error) {
 	entity := config.ToEntity()
 	entity.AccountId = account.ID()
-	db.Save(&entity)
 	a := new(argus.Argus)
 	a.SetEntity(entity)
 	argus.Spawn(*a)
-	return *a
+	return *a, nil
 }
 
 func UpdateMonitor(id uint, config argus.ArgusConfig) (argus.Argus, error) {

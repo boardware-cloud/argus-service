@@ -13,20 +13,19 @@ import (
 
 var db *gorm.DB
 
-var emailSender notifications.Sender
-
-var accountRepository core.AccountRepository
+// var accountRepository core.AccountRepository
 var argusRepository argusModel.ArgusRepository
 
 func Init(inject context.Context) {
 	db = inject.Value("db").(*gorm.DB)
 	core.Init(db)
 	argusModel.Init(db)
-	argus.Init(db)
+	var emailSender notifications.Sender
 	emailSender.SmtpHost = viper.GetString("smtp.host")
 	emailSender.Port = viper.GetString("smtp.port")
 	emailSender.Email = viper.GetString("smtp.email")
 	emailSender.Password = viper.GetString("smtp.password")
-	accountRepository = core.NewAccountRepository(db)
+	// accountRepository = core.NewAccountRepository(db)
 	argusRepository = argusModel.NewArgusRepository(db)
+	argus.Init(db, emailSender)
 }
