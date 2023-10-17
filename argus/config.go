@@ -110,17 +110,15 @@ type EmailReceivers struct {
 }
 
 type PingMonitorConfig struct {
-	Url      string `json:"json"`
+	Host     string `json:"host"`
 	Interval int64  `json:"interval"`
-	Timeout  int64  `json:"timeout"`
 	Retries  int64  `json:"retries"`
 }
 
 func (config PingMonitorConfig) ToEntity() argusModel.Monitor {
 	return &argusModel.PingMonitor{
+		Host:     config.Host,
 		Type:     "PING",
-		Url:      config.Url,
-		Timeout:  config.Timeout,
 		Interval: time.Duration(config.Interval) * time.Second,
 	}
 }

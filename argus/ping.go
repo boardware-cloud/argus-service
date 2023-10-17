@@ -5,6 +5,7 @@ import (
 
 	"github.com/boardware-cloud/common/code"
 	argusModel "github.com/boardware-cloud/model/argus"
+	"github.com/go-ping/ping"
 )
 
 type PingMonitor struct {
@@ -12,8 +13,11 @@ type PingMonitor struct {
 }
 
 func (p PingMonitor) Sleep(a Argus) {
-	// TODO
-	time.Sleep(5 * time.Second)
+	lastRecord := a.Entity().LastRecord()
+	if lastRecord == nil {
+		return
+	}
+	time.Sleep(p.entity.Interval)
 }
 
 func (p *PingMonitor) SetEntity(entity argusModel.Monitor) error {
@@ -30,8 +34,22 @@ func (p PingMonitor) Entity() argusModel.Monitor {
 }
 
 func (h *PingMonitor) Check() Result {
-	// TODO
-	return &PingCheckResult{}
+	pinger, err := ping.NewPinger(h.entity.Host)
+	if err != nil {
+		return &PingCheckResult{
+			status: DOWN,
+		}
+	}
+	pinger.Count = 3
+	err = pinger.Run()
+	if err != nil {
+		return &PingCheckResult{
+			status: DOWN,
+		}
+	}
+	return &PingCheckResult{
+		status: OK,
+	}
 }
 
 type PingCheckResult struct {

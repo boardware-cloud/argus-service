@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/boardware-cloud/common v0.0.0-20231011014717-edbec7094e77
-	github.com/boardware-cloud/model v0.0.0-20231016064858-6c655a56256a
+	github.com/boardware-cloud/model v0.0.0-20231017060923-f9d49daf4ebe
 	github.com/chenyunda218/golambda v0.0.0-20230809035428-25245dc9a8bd
 	github.com/gin-gonic/gin v1.9.1
 	github.com/spf13/viper v1.16.0
@@ -12,7 +12,7 @@ require (
 )
 
 require (
-	github.com/boardware-cloud/argus-api v0.0.0-20231016033109-43957c6928d7
+	github.com/boardware-cloud/argus-api v0.0.0-20231017061049-792b820ef0a6
 	github.com/boardware-cloud/middleware v0.0.0-20231016020416-3575f36e0e79
 )
 
@@ -25,6 +25,7 @@ require (
 	github.com/fxamacker/cbor/v2 v2.5.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
+	github.com/go-ping/ping v1.1.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.15.3 // indirect
@@ -59,6 +60,7 @@ require (
 	golang.org/x/arch v0.5.0 // indirect
 	golang.org/x/crypto v0.13.0 // indirect
 	golang.org/x/net v0.15.0 // indirect
+	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.12.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect

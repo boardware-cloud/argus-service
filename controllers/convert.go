@@ -73,6 +73,8 @@ func MonitorBackward(a argus.Argus) api.Monitor {
 		j, _ := json.Marshal(m)
 		apiPing := api.PingMonitor{}
 		json.Unmarshal(j, &apiPing)
+		interval := *apiPing.Interval / int64(time.Second)
+		apiPing.Interval = &interval
 		apiModel.PingMonitor = &apiPing
 	}
 	return apiModel
@@ -99,9 +101,8 @@ func MonitorConfigConvert(raw api.PutMonitorRequest) argus.ArgusConfig {
 
 func PingMonitorConfigConvert(raw api.PingMonitor) argus.PingMonitorConfig {
 	return argus.PingMonitorConfig{
-		Url:      config.Convention(raw.Url, ""),
+		Host:     config.Convention(raw.Host, ""),
 		Interval: config.Convention(raw.Interval, 60),
-		Timeout:  config.Convention(raw.Timeout, 10),
 		Retries:  config.Convention(raw.Retries, 3),
 	}
 }
