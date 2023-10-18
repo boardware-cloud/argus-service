@@ -51,7 +51,7 @@ func (h *HttpMonitor) Check() Result {
 		tries++
 		start := time.Now().UnixMilli()
 		resp, err := client.Do(req)
-		result.responseTime = time.Duration(time.Now().UnixMilli() - start)
+		result.SetResponseTime(time.Duration(time.Now().UnixMilli() - start))
 		if err != nil {
 			if resp == nil {
 				result.status = TIMEOUT
@@ -113,10 +113,15 @@ type HttpCheckResult struct {
 	responseTime time.Duration
 }
 
-func (r HttpCheckResult) Status() ResultStatus {
-	return r.status
+func (h HttpCheckResult) Status() ResultStatus {
+	return h.status
 }
 
-func (r HttpCheckResult) ResponseTime() time.Duration {
-	return r.responseTime
+func (h HttpCheckResult) ResponseTime() time.Duration {
+	return h.responseTime
+}
+
+func (h *HttpCheckResult) SetResponseTime(r time.Duration) *HttpCheckResult {
+	h.responseTime = r
+	return h
 }
