@@ -60,6 +60,7 @@ func DeleteMonitor(a argus.Argus) {
 }
 
 func ListRecords(argusId uint, index, limit int64) ([]argus.Record, common.Pagination) {
+	// argus := argusRepository.GetById(argusId)
 	var list []argusModel.ArgusRecord
 	pagination := common.ListEntity(&list, index, limit, "created_at DESC", db.Where("argus_id = ?", argusId))
 	var records []argus.Record

@@ -101,8 +101,8 @@ func (MonitorApi) ListMonitoringRecords(c *gin.Context, id string, index, limit,
 			}
 			list, pagination := services.ListRecords(monitor.Entity().ID, index, limit)
 			var recordList []api.MonitoringRecord
-			for _, item := range list {
-				recordList = append(recordList, Convert(item).(api.MonitoringRecord))
+			for _, record := range list {
+				recordList = append(recordList, Convert(record).(api.MonitoringRecord))
 			}
 			c.JSON(http.StatusOK, api.MonitoringRecordList{
 				Data:       recordList,

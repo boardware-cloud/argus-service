@@ -15,9 +15,9 @@ var emailSender notifications.Sender
 
 func Init(inject *gorm.DB, _emailSender notifications.Sender) {
 	db = inject
-	Register()
 	emailSender = _emailSender
 	argusRepository = argusModel.NewArgusRepository(db)
+	Register()
 }
 
 func Spawn(a Argus) {
