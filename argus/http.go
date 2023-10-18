@@ -49,9 +49,9 @@ func (h *HttpMonitor) Check() Result {
 
 	for tries <= h.entity.Retries {
 		tries++
-		start := time.Now().UnixMilli()
+		start := time.Now()
 		resp, err := client.Do(req)
-		result.SetResponseTime(time.Duration(time.Now().UnixMilli() - start))
+		result.SetResponseTime(time.Since(start))
 		if err != nil {
 			if resp == nil {
 				result.status = TIMEOUT
