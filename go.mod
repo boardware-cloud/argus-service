@@ -15,13 +15,13 @@ require (
 
 require (
 	github.com/boardware-cloud/argus-api v0.0.0-20231017061049-792b820ef0a6
+	github.com/boardware-cloud/core v0.0.0-20231024090457-8a83964bad3d
 	github.com/boardware-cloud/middleware v0.0.0-20231024043730-fec00c2fa1eb
+	github.com/go-ping/ping v1.1.0
 )
 
 require (
 	github.com/Dparty/common v0.0.0-20230929033726-ff769bca8c94 // indirect
-	github.com/boardware-cloud/core v0.0.0-20231024090457-8a83964bad3d // indirect
-	github.com/boardware-cloud/core-api v0.0.0-20230914064026-7c514533c0f0 // indirect
 	github.com/boombuler/barcode v1.0.1 // indirect
 	github.com/bwmarrin/snowflake v0.3.0 // indirect
 	github.com/bytedance/sonic v1.10.1 // indirect
@@ -31,7 +31,6 @@ require (
 	github.com/fxamacker/cbor/v2 v2.5.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
-	github.com/go-ping/ping v1.1.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.15.4 // indirect
@@ -71,7 +70,6 @@ require (
 	golang.org/x/sys v0.12.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
-	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/driver/mysql v1.5.1 // indirect
