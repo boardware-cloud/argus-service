@@ -1,10 +1,9 @@
 package controllers
 
 import (
-	"context"
-
 	api "github.com/boardware-cloud/argus-api"
-	"github.com/boardware-cloud/argus-service/services"
+	argusServices "github.com/boardware-cloud/argus-service/services"
+	coreServices "github.com/boardware-cloud/core/services"
 	"github.com/boardware-cloud/middleware"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -12,16 +11,18 @@ import (
 
 var router *gin.Engine
 
-var db *gorm.DB
+var accountService coreServices.AccountService
 
-func Init(inject context.Context) {
-	db = inject.Value("db").(*gorm.DB)
+func Init(inject *gorm.DB) {
+	coreServices.Init(inject)
 	router = gin.Default()
+	router.Use(accountService.Auth())
 	router.Use(middleware.CorsMiddleware())
 	middleware.Health(router)
 	var monitorApi = &MonitorApi{}
 	api.MonitorApiInterfaceMounter(router, monitorApi)
-	services.Init(inject)
+	accountService = coreServices.NewAccountService(inject)
+	argusServices.Init(inject)
 }
 
 func Run(addr ...string) {

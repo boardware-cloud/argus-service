@@ -1,10 +1,12 @@
 module github.com/boardware-cloud/argus-service
 
-go 1.20
+go 1.21
+
+toolchain go1.21.1
 
 require (
-	github.com/boardware-cloud/common v0.0.0-20231011014717-edbec7094e77
-	github.com/boardware-cloud/model v0.0.0-20231018021255-a8faa163271b
+	github.com/boardware-cloud/common v0.0.0-20231024090001-790d2f6126bc
+	github.com/boardware-cloud/model v0.0.0-20231024073442-524cf3c24ff7
 	github.com/chenyunda218/golambda v0.0.0-20230809035428-25245dc9a8bd
 	github.com/gin-gonic/gin v1.9.1
 	github.com/spf13/viper v1.16.0
@@ -13,12 +15,16 @@ require (
 
 require (
 	github.com/boardware-cloud/argus-api v0.0.0-20231017061049-792b820ef0a6
-	github.com/boardware-cloud/middleware v0.0.0-20231016020416-3575f36e0e79
+	github.com/boardware-cloud/middleware v0.0.0-20231024043730-fec00c2fa1eb
 )
 
 require (
+	github.com/Dparty/common v0.0.0-20230929033726-ff769bca8c94 // indirect
+	github.com/boardware-cloud/core v0.0.0-20231024090457-8a83964bad3d // indirect
+	github.com/boardware-cloud/core-api v0.0.0-20230914064026-7c514533c0f0 // indirect
+	github.com/boombuler/barcode v1.0.1 // indirect
 	github.com/bwmarrin/snowflake v0.3.0 // indirect
-	github.com/bytedance/sonic v1.10.0 // indirect
+	github.com/bytedance/sonic v1.10.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
 	github.com/chenzhuoyu/iasm v0.9.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
@@ -28,7 +34,7 @@ require (
 	github.com/go-ping/ping v1.1.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-playground/validator/v10 v10.15.3 // indirect
+	github.com/go-playground/validator/v10 v10.15.4 // indirect
 	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/go-webauthn/webauthn v0.8.6 // indirect
 	github.com/go-webauthn/x v0.1.4 // indirect
@@ -49,6 +55,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.1.0 // indirect
+	github.com/pquerna/otp v1.4.0 // indirect
 	github.com/spf13/afero v1.9.5 // indirect
 	github.com/spf13/cast v1.5.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect

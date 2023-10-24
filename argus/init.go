@@ -2,6 +2,7 @@ package argus
 
 import (
 	"github.com/boardware-cloud/common/notifications"
+
 	argusModel "github.com/boardware-cloud/model/argus"
 	"gorm.io/gorm"
 )

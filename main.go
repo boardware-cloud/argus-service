@@ -1,8 +1,6 @@
 package main
 
 import (
-	"context"
-
 	"github.com/boardware-cloud/argus-service/controllers"
 	"github.com/boardware-cloud/model"
 	"github.com/spf13/viper"
@@ -23,7 +21,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	context := context.WithValue(context.Background(), "db", DB)
-	controllers.Init(context)
+	controllers.Init(DB)
 	controllers.Run(port)
 }
