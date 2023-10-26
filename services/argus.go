@@ -2,7 +2,6 @@ package services
 
 import (
 	"github.com/boardware-cloud/argus-service/argus"
-	"github.com/boardware-cloud/common/code"
 	argusModel "github.com/boardware-cloud/model/argus"
 	"github.com/boardware-cloud/model/common"
 	"github.com/boardware-cloud/model/core"
@@ -16,28 +15,6 @@ func CreateMonitor(account core.Account, config argus.ArgusConfig) (argus.Argus,
 	argus.Spawn(*a)
 	a.SetEntity(entity)
 	return *a, nil
-}
-
-func UpdateMonitor(id uint, config argus.ArgusConfig) (argus.Argus, error) {
-	a, err := GetMonitor(id)
-	if err != nil {
-		return a, err
-	}
-	entity := a.Entity()
-	entity.Update(config.ToEntity())
-	a.SetEntity(entity)
-	argus.Spawn(a)
-	return a, nil
-}
-
-func GetMonitor(id uint) (argus.Argus, error) {
-	model := argusRepository.GetById(id)
-	a := argus.Argus{}
-	if model == nil {
-		return a, code.ErrNotFound
-	}
-	a.SetEntity(*model)
-	return a, nil
 }
 
 func DeleteMonitor(a argus.Argus) {

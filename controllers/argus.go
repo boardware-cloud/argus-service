@@ -21,7 +21,7 @@ type MonitorApi struct{}
 func (MonitorApi) UpdateMonitor(c *gin.Context, monitorId string, request api.PutMonitorRequest) {
 	middleware.GetAccount(c,
 		func(c *gin.Context, account model.Account) {
-			a, err := services.UpdateMonitor(utils.StringToUint(monitorId), MonitorConfigConvert(request))
+			a, err := argusService.UpdateMonitor(utils.StringToUint(monitorId), MonitorConfigConvert(request))
 			if err != nil {
 				code.GinHandler(c, err)
 				return
@@ -35,7 +35,7 @@ func (MonitorApi) CreateMonitor(ctx *gin.Context, request api.PutMonitorRequest)
 	if account == nil {
 		return
 	}
-	a, err := services.CreateMonitor(account.Entity, MonitorConfigConvert(request))
+	a, err := argusService.CreateMonitor(account.Entity, MonitorConfigConvert(request))
 	if err != nil {
 		code.GinHandler(ctx, err)
 	}
@@ -63,7 +63,7 @@ func (MonitorApi) GetMonitor(ctx *gin.Context, id string) {
 	if account == nil {
 		return
 	}
-	a, err := services.GetMonitor(utils.StringToUint(id))
+	a, err := argusService.GetMonitor(utils.StringToUint(id))
 	if err != nil {
 		code.GinHandler(ctx, err)
 		return
@@ -80,7 +80,7 @@ func (MonitorApi) DeleteMonitor(ctx *gin.Context, id string) {
 	if account == nil {
 		return
 	}
-	monitor, err := services.GetMonitor((utils.StringToUint(id)))
+	monitor, err := argusService.GetMonitor((utils.StringToUint(id)))
 	if err != nil {
 		code.GinHandler(ctx, err)
 		return
@@ -98,7 +98,7 @@ func (MonitorApi) ListMonitoringRecords(ctx *gin.Context, id string, index, limi
 	if account == nil {
 		return
 	}
-	monitor, err := services.GetMonitor((utils.StringToUint(id)))
+	monitor, err := argusService.GetMonitor((utils.StringToUint(id)))
 	if err != nil {
 		code.GinHandler(ctx, err)
 		return
