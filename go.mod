@@ -15,13 +15,14 @@ require (
 
 require (
 	github.com/boardware-cloud/argus-api v0.0.0-20231017061049-792b820ef0a6
-	github.com/boardware-cloud/core v0.0.0-20231024091732-f9a02dc90453
+	github.com/boardware-cloud/core v0.0.0-20231026074218-3de5a8f46f91
 	github.com/boardware-cloud/middleware v0.0.0-20231024043730-fec00c2fa1eb
 	github.com/go-ping/ping v1.1.0
 )
 
 require (
 	github.com/Dparty/common v0.0.0-20230929033726-ff769bca8c94 // indirect
+	github.com/boardware-cloud/core-api v0.0.0-20230914064026-7c514533c0f0 // indirect
 	github.com/boombuler/barcode v1.0.1 // indirect
 	github.com/bwmarrin/snowflake v0.3.0 // indirect
 	github.com/bytedance/sonic v1.10.1 // indirect
