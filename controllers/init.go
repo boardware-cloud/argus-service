@@ -12,17 +12,20 @@ import (
 var router *gin.Engine
 
 var accountService coreServices.AccountService
+var argusService argusServices.ArgusService
 
 func Init(inject *gorm.DB) {
+	argusServices.Init(inject)
 	coreServices.Init(inject)
+	argusServices.Init(inject)
+	accountService = coreServices.NewAccountService(inject)
+	argusService = argusServices.NewArgusService(inject)
 	router = gin.Default()
 	router.Use(accountService.Auth())
 	router.Use(middleware.CorsMiddleware())
 	middleware.Health(router)
 	var monitorApi = &MonitorApi{}
 	api.MonitorApiInterfaceMounter(router, monitorApi)
-	accountService = coreServices.NewAccountService(inject)
-	argusServices.Init(inject)
 }
 
 func Run(addr ...string) {

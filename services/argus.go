@@ -44,16 +44,6 @@ func GetMonitor(id uint) (argus.Argus, error) {
 	return a, nil
 }
 
-func ListMonitors(accountId uint, index, limit int64) ([]argus.Argus, common.Pagination) {
-	var list []argusModel.Argus
-	pagination := common.ListEntity(&list, index, limit, "", db.Where("account_id = ?", accountId))
-	var argusList []argus.Argus
-	for _, item := range list {
-		argusList = append(argusList, argus.NewArgus(item))
-	}
-	return argusList, pagination
-}
-
 func DeleteMonitor(a argus.Argus) {
 	entity := a.Entity()
 	db.Delete(&entity)

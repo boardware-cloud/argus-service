@@ -19,7 +19,6 @@ const DEFAULT_INTERVAL = 5 * 60
 type MonitorApi struct{}
 
 func (MonitorApi) UpdateMonitor(c *gin.Context, monitorId string, request api.PutMonitorRequest) {
-
 	middleware.GetAccount(c,
 		func(c *gin.Context, account model.Account) {
 			a, err := services.UpdateMonitor(utils.StringToUint(monitorId), MonitorConfigConvert(request))
@@ -48,7 +47,7 @@ func (MonitorApi) ListMonitors(ctx *gin.Context, ordering api.Ordering, index in
 	if account == nil {
 		return
 	}
-	list, pagination := services.ListMonitors(account.ID(), index, limit)
+	list, pagination := argusService.ListMonitors(account.ID(), index, limit)
 	var monitorList []api.Monitor
 	for _, item := range list {
 		monitorList = append(monitorList, Convert(item).(api.Monitor))
