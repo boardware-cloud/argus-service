@@ -31,7 +31,7 @@ type EmailNotification struct {
 }
 
 func (e EmailNotification) Notify(message string) {
-	err := emailSender.SendHtml(
+	emailSender.SendHtml(
 		emailSender.Email,
 		"Uptime monitor alert",
 		message,
@@ -39,7 +39,4 @@ func (e EmailNotification) Notify(message string) {
 		e.Cc,
 		e.Bcc,
 	)
-	if err != nil {
-		panic(err)
-	}
 }

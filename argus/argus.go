@@ -58,7 +58,7 @@ func (a *Argus) Alive() bool {
 
 func (a Argus) Notify() {
 	record := a.Entity().LastNotificationRecord()
-	if record == nil || record.CreatedAt.Add(a.entity.NotificationGroup.Interval).Unix() <= time.Now().Unix() {
+	if record == nil || time.Now().After(record.CreatedAt.Add(a.entity.NotificationGroup.Interval)) {
 		message := fmt.Sprintf(`
 		<html>
 			<body>

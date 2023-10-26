@@ -6,7 +6,7 @@ toolchain go1.21.1
 
 require (
 	github.com/boardware-cloud/common v0.0.0-20231024090001-790d2f6126bc
-	github.com/boardware-cloud/model v0.0.0-20231026073717-b098992f9642
+	github.com/boardware-cloud/model v0.0.0-20231026093851-2ec7634d8eae
 	github.com/chenyunda218/golambda v0.0.0-20230809035428-25245dc9a8bd
 	github.com/gin-gonic/gin v1.9.1
 	github.com/spf13/viper v1.16.0
