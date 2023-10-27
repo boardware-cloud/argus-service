@@ -1,7 +1,6 @@
 package argus
 
 import (
-	"fmt"
 	"sync"
 	"time"
 
@@ -59,21 +58,18 @@ func (a *Argus) Alive() bool {
 func (a Argus) Notify() {
 	record := a.Entity().LastNotificationRecord()
 	if record == nil || time.Now().After(record.CreatedAt.Add(a.entity.NotificationGroup.Interval)) {
-		message := fmt.Sprintf(`
-		<html>
-			<body>
-				<div>Url: %s</div>
-				<div>Check time: %s</div>
-				<div>Status: %s</div>
-			</body>
-		</html>`, a.Entity().Monitor().Target(), time.Now(), "Down")
+		data := notificationData{
+			Target:    a.Entity().Monitor().Target(),
+			CheckedAt: time.Now(),
+			Status:    "Down",
+		}
 		a.Entity().SaveNotificationRecord(&argusModel.NotificationRecord{
 			ArgusId:           a.entity.ID,
-			Message:           message,
+			Message:           data.Message(),
 			NotificationGroup: a.entity.NotificationGroup,
 		})
 		for _, notification := range a.Entity().NotificationGroup.Notifications() {
-			NotificationBackward(notification).Notify(message)
+			NotificationBackward(notification).Notify(data)
 		}
 	}
 }

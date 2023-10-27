@@ -136,6 +136,7 @@ func NotificationGroupBackward(raw notification.NotificationGroup) api.Notificat
 		case "EMAIL":
 			entity := n.Entity().(notification.Email)
 			temp.Email = &api.EmailNotification{
+				Template: entity.Template,
 				Receivers: &api.EmailReceivers{
 					To:  entity.To,
 					Cc:  entity.Cc,
@@ -145,11 +146,10 @@ func NotificationGroupBackward(raw notification.NotificationGroup) api.Notificat
 		}
 		notifications = append(notifications, temp)
 	}
-	o := api.NotificationGroup{
+	return api.NotificationGroup{
 		Interval:      &interval,
 		Notifications: &notifications,
 	}
-	return o
 }
 
 func NotificationGroupConvert(raw api.NotificationGroup) argus.NotificationGroupConfig {
@@ -172,6 +172,7 @@ func NotificationConvert(raw api.Notification) argus.NotificationConfig {
 
 func EmailNotificationConvert(raw api.EmailNotification) argus.EmailNotificationConfig {
 	return argus.EmailNotificationConfig{
+		Template: raw.Template,
 		Receivers: argus.EmailReceivers{
 			To:  raw.Receivers.To,
 			Cc:  raw.Receivers.Cc,
