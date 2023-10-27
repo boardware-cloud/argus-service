@@ -14,7 +14,7 @@ require (
 )
 
 require (
-	github.com/boardware-cloud/argus-api v0.0.0-20231017061049-792b820ef0a6
+	github.com/boardware-cloud/argus-api v0.0.0-20231027031938-4dca2a772799
 	github.com/boardware-cloud/core v0.0.0-20231026074218-3de5a8f46f91
 	github.com/boardware-cloud/middleware v0.0.0-20231024043730-fec00c2fa1eb
 	github.com/go-ping/ping v1.1.0
