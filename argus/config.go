@@ -61,6 +61,7 @@ func (config HttpMonitorConfig) ToEntity() argusModel.Monitor {
 		HttpMethod:          config.Method,
 		Headers:             headers,
 		AcceptedStatusCodes: acceptedStatusCodes,
+		Retries:             config.Retries,
 	}
 }
 
