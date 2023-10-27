@@ -89,6 +89,7 @@ type NotificationConfig interface {
 type EmailNotificationConfig struct {
 	Interval  *time.Duration `json:"interval"`
 	Receivers EmailReceivers `json:"receivers"`
+	Template  *string        `json:"template"`
 }
 
 func (e EmailNotificationConfig) ToEntity() notification.Notification {
@@ -97,9 +98,10 @@ func (e EmailNotificationConfig) ToEntity() notification.Notification {
 		Interval: e.Interval,
 	}
 	n.SetEntity(notification.Email{
-		To:  e.Receivers.To,
-		Cc:  e.Receivers.Cc,
-		Bcc: e.Receivers.Bcc,
+		To:       e.Receivers.To,
+		Cc:       e.Receivers.Cc,
+		Bcc:      e.Receivers.Bcc,
+		Template: e.Template,
 	})
 	return n
 }
