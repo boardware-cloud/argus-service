@@ -25,8 +25,7 @@ func (n notificationData) Message() string {
 		</html>`, n.Target, n.CheckedAt, n.Status)
 }
 
-type NotificationGroup struct {
-}
+type NotificationGroup struct{}
 
 type Notification interface {
 	Notify(notificationData)
@@ -54,28 +53,23 @@ type EmailNotification struct {
 }
 
 func (e EmailNotification) Notify(notificationData notificationData) {
+	var message string
 	if e.Template != nil {
-		emailSender.SendHtml(
-			emailSender.Email,
-			"Uptime monitor alert",
-			templateString(notificationData, *e.Template),
-			e.To,
-			e.Cc,
-			e.Bcc,
-		)
+		message = templateStringHelper(notificationData, *e.Template)
 	} else {
-		emailSender.SendHtml(
-			emailSender.Email,
-			"Uptime monitor alert",
-			notificationData.Message(),
-			e.To,
-			e.Cc,
-			e.Bcc,
-		)
+		message = notificationData.Message()
 	}
+	emailSender.SendHtml(
+		emailSender.Email,
+		"Uptime monitor alert",
+		message,
+		e.To,
+		e.Cc,
+		e.Bcc,
+	)
 }
 
-func templateString(notificationData notificationData, template string) string {
+func templateStringHelper(notificationData notificationData, template string) string {
 	s := strings.ReplaceAll(template, "__STATUS__", notificationData.Status)
 	s = strings.ReplaceAll(s, "__TIME__", notificationData.CheckedAt.Local().Format("2006 01-02 15:04"))
 	s = strings.ReplaceAll(s, "__TARGET__", notificationData.Target)
