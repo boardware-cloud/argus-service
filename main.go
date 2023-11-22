@@ -2,21 +2,17 @@ package main
 
 import (
 	"github.com/boardware-cloud/argus-service/controllers"
+	"github.com/boardware-cloud/common/config"
 	"github.com/boardware-cloud/model"
-	"github.com/spf13/viper"
 )
 
 func main() {
-	viper.SetConfigName("env")
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath("./config")
-	viper.ReadInConfig()
-	port := ":" + viper.GetString("server.port")
-	user := viper.GetString("database.user")
-	password := viper.GetString("database.password")
-	host := viper.GetString("database.host")
-	dbport := viper.GetString("database.port")
-	database := viper.GetString("database.database")
+	port := ":" + config.GetString("server.port")
+	user := config.GetString("database.user")
+	password := config.GetString("database.password")
+	host := config.GetString("database.host")
+	dbport := config.GetString("database.port")
+	database := config.GetString("database.database")
 	DB, err := model.NewConnection(user, password, host, dbport, database)
 	if err != nil {
 		panic(err)

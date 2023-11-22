@@ -5,11 +5,11 @@ go 1.21
 toolchain go1.21.1
 
 require (
-	github.com/boardware-cloud/common v0.0.0-20231024090001-790d2f6126bc
+	github.com/boardware-cloud/common v0.0.0-20231122022649-2d8b0ee6bded
 	github.com/boardware-cloud/model v0.0.0-20231027035438-be3ce8a6adc5
 	github.com/chenyunda218/golambda v0.0.0-20230809035428-25245dc9a8bd
 	github.com/gin-gonic/gin v1.9.1
-	github.com/spf13/viper v1.16.0
+	github.com/spf13/viper v1.16.0 // indirect
 	gorm.io/gorm v1.25.4
 )
 
@@ -22,7 +22,6 @@ require (
 
 require (
 	github.com/Dparty/common v0.0.0-20230929033726-ff769bca8c94 // indirect
-	github.com/boardware-cloud/core-api v0.0.0-20230914064026-7c514533c0f0 // indirect
 	github.com/boombuler/barcode v1.0.1 // indirect
 	github.com/bwmarrin/snowflake v0.3.0 // indirect
 	github.com/bytedance/sonic v1.10.1 // indirect

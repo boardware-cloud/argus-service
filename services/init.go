@@ -2,10 +2,10 @@ package services
 
 import (
 	"github.com/boardware-cloud/argus-service/argus"
+	"github.com/boardware-cloud/common/config"
 	"github.com/boardware-cloud/common/notifications"
 	argusModel "github.com/boardware-cloud/model/argus"
 	"github.com/boardware-cloud/model/core"
-	"github.com/spf13/viper"
 	"gorm.io/gorm"
 )
 
@@ -18,10 +18,10 @@ func Init(inject *gorm.DB) {
 	core.Init(db)
 	argusModel.Init(db)
 	var emailSender notifications.Sender
-	emailSender.SmtpHost = viper.GetString("smtp.host")
-	emailSender.Port = viper.GetString("smtp.port")
-	emailSender.Email = viper.GetString("smtp.email")
-	emailSender.Password = viper.GetString("smtp.password")
+	emailSender.SmtpHost = config.GetString("smtp.host")
+	emailSender.Port = config.GetString("smtp.port")
+	emailSender.Email = config.GetString("smtp.email")
+	emailSender.Password = config.GetString("smtp.password")
 	argusRepository = argusModel.NewArgusRepository(db)
 	argus.Init(db, emailSender)
 }
