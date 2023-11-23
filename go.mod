@@ -6,7 +6,7 @@ toolchain go1.21.1
 
 require (
 	github.com/boardware-cloud/common v0.0.0-20231123012338-1e4e3f0c3f19
-	github.com/boardware-cloud/model v0.0.0-20231122145507-e6eb7eea6945
+	github.com/boardware-cloud/model v0.0.0-20231123064401-4bff54a4798c
 	github.com/chenyunda218/golambda v0.0.0-20230809035428-25245dc9a8bd
 	github.com/gin-gonic/gin v1.9.1
 	github.com/spf13/viper v1.16.0 // indirect
@@ -16,7 +16,7 @@ require (
 require (
 	github.com/boardware-cloud/argus-api v0.0.0-20231027031938-4dca2a772799
 	github.com/boardware-cloud/core v0.0.0-20231123011523-f1b96bbddc7c
-	github.com/boardware-cloud/middleware v0.0.0-20231024043730-fec00c2fa1eb
+	github.com/boardware-cloud/middleware v0.0.0-20231123063935-dc48f813a8bc
 	github.com/go-ping/ping v1.1.0
 )
 
