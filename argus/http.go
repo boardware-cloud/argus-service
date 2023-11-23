@@ -38,9 +38,6 @@ func (h *HttpMonitor) Entity() argusModel.Monitor {
 func (h *HttpMonitor) Check() Result {
 	client := &http.Client{Timeout: time.Duration(h.entity.Timeout) * time.Second}
 	req, _ := http.NewRequest(string(h.entity.HttpMethod), h.entity.Url, nil)
-	// if m.Body != nil {
-	// 	req, _ = http.NewRequest(string(*m.HttpMethod), m.Url, bytes.NewReader([]byte(*m.Body)))
-	// }
 	for _, header := range h.entity.Headers {
 		req.Header.Add(header.Left, header.Right)
 	}

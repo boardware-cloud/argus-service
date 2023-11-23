@@ -6,17 +6,25 @@ import (
 	argusModel "github.com/boardware-cloud/model/argus"
 	"github.com/boardware-cloud/model/common"
 	"github.com/boardware-cloud/model/core"
-	"gorm.io/gorm"
 )
 
-func NewArgusService(db *gorm.DB) ArgusService {
-	return ArgusService{
-		argusRepository: argusModel.NewArgusRepository(db),
+var argusService *ArgusService
+
+func GetArgusService() *ArgusService {
+	if argusService == nil {
+		argusService = NewArgusService()
+	}
+	return argusService
+}
+
+func NewArgusService() *ArgusService {
+	return &ArgusService{
+		argusRepository: argusModel.GetArgusRepository(),
 	}
 }
 
 type ArgusService struct {
-	argusRepository argusModel.ArgusRepository
+	argusRepository *argusModel.ArgusRepository
 }
 
 func (as ArgusService) CreateMonitor(account core.Account, config argus.ArgusConfig) (argus.Argus, error) {
